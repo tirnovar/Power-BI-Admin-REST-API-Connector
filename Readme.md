@@ -4,16 +4,16 @@
 **FOR ALL THESE TOPICS IS REQUIRED TO HAVE POWER ADMIN RIGHTS**
 ID | Name | Description
 -- | ---- | ----------- 
-0 | Generic Informations About Tenant | 
-1 | Gateways | 
-2 | Groups & Workspaces |
-3 | Deployment Pipelines |
-4 | Dataflows |
-5 | Datasets |
-6 | Reports |
-7 | Dashboard |
-8 | Apps |
-9 | Scanner API Functions |
+0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Capacities </code>.
+1 | Gateways | Contains information about gateways in tenants, even about personal gateways.
+2 | Groups & Workspaces |  < TBD >
+3 | Deployment Pipelines | < TBD >
+4 | Dataflows | < TBD >
+5 | Datasets | < TBD >
+6 | Reports | < TBD >
+7 | Dashboard | < TBD >
+8 | Apps | < TBD >
+9 | Scanner API Functions | Library of functions dedicated to Scanner API.
 99 | Functions library | Special functions that can be used for further Admin view about tenant.
 
 ## Authentication method
