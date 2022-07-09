@@ -523,6 +523,14 @@ DataflowsNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                        {
+                            Extension.LoadString("StorageAccounts"),
+                            "StorageAccounts",
+                            pbiAdminAPI.StorageAccounts(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -1164,6 +1172,44 @@ pbiAdminAPI.Dataflows =
                                 _[users]?,
                                 _[modifiedBy]?,
                                 _[modifiedDateTime]?
+                            }
+                    )
+                )
+        in
+            output;
+//** Dataflows Storage Accounts
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.StorageAccounts =
+    () =>
+        let
+            apiCall =
+                Json.Document(
+                    Web.Contents(
+                        api_uri,
+                        [
+                            RelativePath = "dataflowStorageAccounts",
+                            Headers = [
+                                #"Content-Type" = "application/json"
+                            ]
+                        ]
+                    )
+                ),
+            output =
+                #table(
+                    type table [
+                        id = text,
+                        name = text,
+                        isEnabled = text
+                    ],
+                    List.Transform(
+                        apiCall[value],
+                        each
+                            {
+                                _[id]?,
+                                _[name]?,
+                                _[isEnabled]?
                             }
                     )
                 )

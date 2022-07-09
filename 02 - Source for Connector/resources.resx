@@ -207,6 +207,9 @@
   <data name="Dataflows" xml:space="preserve">
     <value>Dataflows</value>
   </data>
+  <data name="StorageAccounts" xml:space="preserve">
+    <value>Storage Accounts assigned with Dataflows</value>
+  </data>
   <data name="Capacities" xml:space="preserve">
     <value>Capacities</value>
   </data>
