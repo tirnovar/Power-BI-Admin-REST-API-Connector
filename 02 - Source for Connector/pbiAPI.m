@@ -586,6 +586,14 @@ FunctionsNavigation =
                             true
                         },
                         {
+                            Extension.LoadString("Goals"),
+                            "Goals",
+                            pbiAdminAPI.Goals,
+                            "Function",
+                            "Goals",
+                            true
+                        },
+                        {
                             Extension.LoadString("ExecuteQuery"),
                             "ExecuteQuery",
                             pbiAdminAPI.ExecuteQuery,
@@ -2016,6 +2024,152 @@ Scorecards =
                         {
                             {
                                 "Please fill parameter of function."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
+//**** Goals
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.Goals = Value.ReplaceType(Goals, GoalsType);
+
+GoalsType =
+    type function (optional workspaceId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Workspace ID",
+                Documentation.FieldDescription = "Workspace ID where is scorecard stored.",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        ), optional scorecardId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Scorecard ID",
+                Documentation.FieldDescription = "Scorecard ID from where you want to recieve goals.",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.Goals",
+        Documentation.LongDescription =
+            "!!! This call can be used only on Groups where you have access !!!
+        Returns all Goals that are from selected scorecard and in selected workspace.",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.Goals(""xxx-xxxx-yyxa..."",""xxx-xxxx-yyxa..."")",
+                Result = ""
+            ]
+        }
+    ];
+
+Goals =
+    (optional workspaceId as text, optional scorecardId as text) =>
+        let
+            functionVarTester =
+                try
+                    if
+                        (
+                            workspaceId
+                            <> null and workspaceId
+                            <> ""
+                        ) and (
+                            scorecardId
+                            <> null and scorecardId
+                            <> ""
+                        )
+                    then
+                        let
+                            apiCall =
+                                Json.Document(
+                                    Web.Contents(
+                                        api_uri,
+                                        [
+                                            RelativePath =
+                                                "groups/"
+                                                & workspaceId
+                                                & "/scorecards/"
+                                                & scorecardId
+                                                & "/goals",
+                                            Headers = [
+                                                #"Content-Type" = "application/json"
+                                            ]
+                                        ]
+                                    )
+                                ),
+                            output =
+                                #table(
+                                    type table [
+                                        id = text,
+                                        name = text,
+                                        scorecardId = text,
+                                        lastModifiedBy = text,
+                                        createdTime = datetime,
+                                        owner = text,
+                                        unit = text,
+                                        lastModifiedTime = datetime,
+                                        startDate = datetime,
+                                        completionDate = datetime,
+                                        valueConnection = record,
+                                        notesCount = text,
+                                        valuesFormatString = text,
+                                        permissions = text,
+                                        level = text,
+                                        rank = text,
+                                        additionalOwners = list
+                                    ],
+                                    List.Transform(
+                                        apiCall[value],
+                                        each
+                                            {
+                                                _[id]?,
+                                                _[name]?,
+                                                _[scorecardId]?,
+                                                _[lastModifiedBy]?,
+                                                _[createdTime]?,
+                                                _[owner]?,
+                                                _[unit]?,
+                                                _[lastModifiedTime]?,
+                                                _[startDate]?,
+                                                _[completionDate]?,
+                                                _[valueConnection]?,
+                                                _[notesCount]?,
+                                                _[valuesFormatString]?,
+                                                _[permissions]?,
+                                                _[level]?,
+                                                _[rank]?,
+                                                _[additionalOwners]?
+                                            }
+                                    )
+                                )
+                        in
+                            output
+                    else
+                        #table(
+                            type table [Response = text],
+                            {
+                                {
+                                    "Please fill parameters of function."
+                                }
+                            }
+                        )
+                otherwise
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Hmm... Something is not quite right. Please check inserted parameters or try it later."
                             }
                         }
                     )
