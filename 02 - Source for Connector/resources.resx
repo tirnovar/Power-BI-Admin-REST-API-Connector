@@ -175,7 +175,10 @@
     <value>Apps</value>
   </data>
   <data name="Scorecards" xml:space="preserve">
-    <value>Scorecards</value>
+    <value>Metrics - Scorecards</value>
+  </data>
+  <data name="Goals" xml:space="preserve">
+    <value>Metrics - Goals</value>
   </data>
   <data name="DeploymentPipelines" xml:space="preserve">
     <value>Deployment Pipelines</value>
