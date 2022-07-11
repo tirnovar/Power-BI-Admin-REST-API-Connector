@@ -210,11 +210,19 @@ DatasetsNavigation =
                             true
                         },
                         {
-                            Extension.LoadString("RefreshesOfDatasets"),
-                            "RefreshesOfDatasets",
-                            pbiAdminAPI.RefreshesOfDatasets(),
+                            Extension.LoadString("RefreshesOfAllDatasets"),
+                            "RefreshesOfAllDatasets",
+                            pbiAdminAPI.RefreshesOfAllDatasets(),
                             "Table",
                             "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("RefreshesOfDataset"),
+                            "RefreshesOfDataset",
+                            pbiAdminAPI.RefreshesOfDataset,
+                            "Function",
+                            "ArtifactAccess",
                             true
                         },
                         {
@@ -228,7 +236,7 @@ DatasetsNavigation =
                     }
                 ),
             Navigation =
-                Table.ToNavigationTable(
+                Table.ForceToNavigationTable(
                     objects,
                     {"Key"},
                     "Name",
@@ -543,7 +551,7 @@ DataflowsNavigation =
                     }
                 ),
             Navigation =
-                Table.ForceToNavigationTable(
+                Table.ToNavigationTable(
                     objects,
                     {"Key"},
                     "Name",
@@ -806,11 +814,11 @@ pbiAdminAPI.Datasets =
                 )
         in
             output;
-//**** Refresh history of Datasets
+//**** Refresh history of ALL Datasets
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
-pbiAdminAPI.RefreshesOfDatasets =
+pbiAdminAPI.RefreshesOfAllDatasets =
     () =>
         let
             datasetsId = pbiAdminAPI.Datasets()[id],
@@ -818,20 +826,20 @@ pbiAdminAPI.RefreshesOfDatasets =
                 List.Transform(
                     datasetsId,
                     each
-                    try
-                        Json.Document(
-                            Web.Contents(
-                                api_uri,
-                                [
-                                    RelativePath = "admin/datasets/" & _ & "/refreshes",
-                                    Headers = [
-                                        #"Content-Type" = "application/json"
+                        try
+                            Json.Document(
+                                Web.Contents(
+                                    api_uri,
+                                    [
+                                        RelativePath = "admin/datasets/" & _ & "/refreshes",
+                                        Headers = [
+                                            #"Content-Type" = "application/json"
+                                        ]
                                     ]
-                                ]
+                                )
                             )
-                        )
-                            [value]
-                    otherwise {}
+                                [value]
+                        otherwise {}
                 ),
             unitor = List.RemoveNulls(List.Union(transformator)),
             output =
@@ -870,6 +878,112 @@ pbiAdminAPI.RefreshesOfDatasets =
                 )
         in
             output;
+//**** Refresh history of Datasets
+//**** Scanner API - GET INFO()
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.RefreshesOfDataset =
+    Value.ReplaceType(
+        RefreshesOfDataset,
+        RefreshesOfDatasetType
+    );
+
+RefreshesOfDatasetType =
+    type function (optional datasetId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Dataset ID",
+                Documentation.FieldDescription = "Dataset ID that will be scanned for its refresh history",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.RefreshesOfDataset",
+        Documentation.LongDescription = "Returns refresh history of selected Dataset and calculates refresh time.",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.ScannerAPIInfo(""xxx-xxxx-yyxa..."")",
+                Result = ""
+            ]
+        }
+    ];
+
+RefreshesOfDataset =
+    (optional datasetId as text) =>
+        let
+            functionVarTester =
+                if (datasetId <> null and datasetId <> "") then
+                    let
+                        apiCall =
+                            Json.Document(
+                                Web.Contents(
+                                    api_uri,
+                                    [
+                                        RelativePath =
+                                            "admin/datasets/"
+                                            & datasetId
+                                            & "/refreshes",
+                                        Headers = [
+                                            #"Content-Type" = "application/json"
+                                        ]
+                                    ]
+                                )
+                            )
+                                [value],
+                        output =
+                            #table(
+                                type table [
+                                    requestId = text,
+                                    id = text,
+                                    refreshType = text,
+                                    startTime = datetime,
+                                    endTime = datetime,
+                                    status = text,
+                                    refreshInSeconds = number
+                                ],
+                                List.Transform(
+                                    apiCall,
+                                    each
+                                        let
+                                            stTime = DateTime.From(_[startTime]?),
+                                            enTime = DateTime.From(_[endTime]?),
+                                            durationOfRefresh =
+                                                if stTime = null or enTime = null then
+                                                    null
+                                                else
+                                                    Duration.TotalSeconds(enTime - stTime)
+                                        in
+                                            {
+                                                _[requestId]?,
+                                                _[id]?,
+                                                _[refreshType]?,
+                                                stTime,
+                                                enTime,
+                                                _[status]?,
+                                                durationOfRefresh
+                                            }
+                                )
+                            )
+                    in
+                        output
+                else
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Please fill parameter of function."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
 //**** Table of Refreshable datasets
 [
     DataSource.Kind = "pbiAdminAPI"

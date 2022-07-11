@@ -165,8 +165,11 @@
   <data name="Datasets" xml:space="preserve">
     <value>Datasets</value>
   </data>
-  <data name="RefreshesOfDatasets" xml:space="preserve">
+  <data name="RefreshesOfAllDatasets" xml:space="preserve">
     <value>Refreshes history of Datasets (ALL)</value>
+  </data>
+  <data name="RefreshesOfDataset" xml:space="preserve">
+    <value>Refreshes history of Dataset</value>
   </data>
   <data name="Refreshables" xml:space="preserve">
     <value>Refreshables</value>
