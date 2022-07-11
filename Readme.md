@@ -6,14 +6,15 @@ ID | Name | Description
 -- | ---- | ----------- 
 0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Capacities </code>.
 1 | Gateways | Contains information about gateways in tenants, even about personal gateways.
-2 | Groups & Workspaces |  < TBD >
-3 | Deployment Pipelines | < TBD >
-4 | Dataflows | < TBD >
-5 | Datasets | < TBD >
-6 | Reports | < TBD >
-7 | Dashboard | < TBD >
-8 | Apps | < TBD >
-9 | Scanner API Functions | Library of functions dedicated to Scanner API.
+2 | Groups & Workspaces | Returns all groups and workspace in a tenant.
+3 | Deployment Pipelines | Returns all deployment pipelines with their assigned groups and their tag by deployment progress.
+4 | Dataflows | Returns all dataflows in a tenant
+5 | Datasets | Contains table of all datasets and their refresh history in tenant but also it contains function for recieving refresh history of exact datasets.
+6 | Reports | Returns all reports in a tenant.
+7 | Dashboard | Return all dashboard in tenant and their tiles.
+8 | Metrics | Contains function to get Scorecards and Goals from selected Group (**YOU NEED TO HAVE ACCESS INTO THIS GROUP**)
+9 | Apps | Returns all apps in a tenant.
+10 | Scanner API Functions | Library of functions dedicated to Scanner API.
 99 | Functions library | Special functions that can be used for further Admin view about tenant.
 
 ## Authentication method
