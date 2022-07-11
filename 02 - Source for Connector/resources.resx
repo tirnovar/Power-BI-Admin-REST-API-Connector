@@ -139,7 +139,7 @@
     <value>06 - Reports</value>
   </data>
   <data name="AppAdmin" xml:space="preserve">
-    <value>08 - Apps</value>
+    <value>09 - Apps</value>
   </data>
   <data name="DeploymentPipelinesAdmin" xml:space="preserve">
     <value>03 - Deployment Pipelines</value>
@@ -157,7 +157,10 @@
     <value>01 - Gateways</value>
   </data>
   <data name="ScannerAdmin" xml:space="preserve">
-    <value>09 - Scanner API Functions</value>
+    <value>10 - Scanner API Functions</value>
+  </data>
+  <data name="MetricsAdmin" xml:space="preserve">
+    <value>08 - Metrics</value>
   </data>
   <data name="Groups" xml:space="preserve">
     <value>Groups</value>
