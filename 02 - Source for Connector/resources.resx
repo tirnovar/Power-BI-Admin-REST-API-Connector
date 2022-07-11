@@ -166,7 +166,7 @@
     <value>Datasets</value>
   </data>
   <data name="RefreshesOfDatasets" xml:space="preserve">
-    <value>Refreshes history of Datasets</value>
+    <value>Refreshes history of Datasets (ALL)</value>
   </data>
   <data name="Refreshables" xml:space="preserve">
     <value>Refreshables</value>
@@ -190,7 +190,7 @@
     <value>Dashboards</value>
   </data>
   <data name="Tiles" xml:space="preserve">
-    <value>Tiles</value>
+    <value>Tiles from Dashboards (ALL)</value>
   </data>
   <data name="Gateways" xml:space="preserve">
     <value>Gateways</value>
@@ -208,7 +208,7 @@
     <value>Reports Published to Web</value>
   </data>
   <data name="UnusedArtifacts" xml:space="preserve">
-    <value>Unused Artifacts in Groups</value>
+    <value>Unused Artifacts in Groups (ALL)</value>
   </data>
   <data name="Dataflows" xml:space="preserve">
     <value>Dataflows</value>
