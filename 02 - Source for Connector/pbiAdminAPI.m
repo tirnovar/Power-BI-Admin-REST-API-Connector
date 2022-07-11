@@ -111,6 +111,14 @@ pbiAdminAPI.Navigation =
                             false
                         },
                         {
+                            Extension.LoadString("MetricsAdmin"),
+                            "MetricsAdmin",
+                            MetricsNavigation(),
+                            "Folder",
+                            "MetricsAdmin",
+                            false
+                        },
+                        {
                             Extension.LoadString("GatewaysAdmin"),
                             "GatewaysAdmin",
                             GatewaysNavigation(),
@@ -359,6 +367,50 @@ DeploymentPipelinesNavigation =
         in
             Navigation;
 
+MetricsNavigation =
+    () as table =>
+        let
+            objects =
+                #table(
+                    {
+                        "Name",
+                        "Key",
+                        "Data",
+                        "ItemKind",
+                        "ItemName",
+                        "IsLeaf"
+                    },
+                    {
+                          {
+                            Extension.LoadString("Scorecards"),
+                            "Scorecards",
+                            pbiAdminAPI.Scorecards,
+                            "Function",
+                            "Scorecards",
+                            true
+                        },
+                        {
+                            Extension.LoadString("Goals"),
+                            "Goals",
+                            pbiAdminAPI.Goals,
+                            "Function",
+                            "Goals",
+                            true
+                        }
+                    }
+                ),
+            Navigation =
+                Table.ForceToNavigationTable(
+                    objects,
+                    {"Key"},
+                    "Name",
+                    "Data",
+                    "ItemKind",
+                    "ItemName",
+                    "IsLeaf"
+                )
+        in
+            Navigation;
 DashboardNavigation =
     () as table =>
         let
@@ -591,22 +643,6 @@ FunctionsNavigation =
                             pbiAdminAPI.Subscriptions,
                             "Function",
                             "Subscriptions",
-                            true
-                        },
-                        {
-                            Extension.LoadString("Scorecards"),
-                            "Scorecards",
-                            pbiAdminAPI.Scorecards,
-                            "Function",
-                            "Scorecards",
-                            true
-                        },
-                        {
-                            Extension.LoadString("Goals"),
-                            "Goals",
-                            pbiAdminAPI.Goals,
-                            "Function",
-                            "Goals",
                             true
                         },
                         {
