@@ -165,6 +165,9 @@
   <data name="Datasets" xml:space="preserve">
     <value>Datasets</value>
   </data>
+  <data name="RefreshesOfDatasets" xml:space="preserve">
+    <value>Refreshes history of Datasets</value>
+  </data>
   <data name="Refreshables" xml:space="preserve">
     <value>Refreshables</value>
   </data>

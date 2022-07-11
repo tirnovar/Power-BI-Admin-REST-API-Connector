@@ -210,6 +210,14 @@ DatasetsNavigation =
                             true
                         },
                         {
+                            Extension.LoadString("RefreshesOfDatasets"),
+                            "RefreshesOfDatasets",
+                            pbiAdminAPI.RefreshesOfDatasets(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
                             Extension.LoadString("Refreshables"),
                             "Refreshables",
                             pbiAdminAPI.DatasetsRefreshables(),
@@ -794,6 +802,70 @@ pbiAdminAPI.Datasets =
                                 _[qnaEmbedURL]?,
                                 _[upstreamDatasets]?
                             }
+                    )
+                )
+        in
+            output;
+//**** Refresh history of Datasets
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.RefreshesOfDatasets =
+    () =>
+        let
+            datasetsId = pbiAdminAPI.Datasets()[id],
+            transformator =
+                List.Transform(
+                    datasetsId,
+                    each
+                    try
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/datasets/" & _ & "/refreshes",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]
+                    otherwise {}
+                ),
+            unitor = List.RemoveNulls(List.Union(transformator)),
+            output =
+                #table(
+                    type table [
+                        requestId = text,
+                        id = text,
+                        refreshType = text,
+                        startTime = datetime,
+                        endTime = datetime,
+                        status = text,
+                        refreshInSeconds = number
+                    ],
+                    List.Transform(
+                        unitor,
+                        each
+                            let
+                                stTime = DateTime.From(_[startTime]?),
+                                enTime = DateTime.From(_[endTime]?),
+                                durationOfRefresh =
+                                    if stTime = null or enTime = null then
+                                        null
+                                    else
+                                        Duration.TotalSeconds(enTime - stTime)
+                            in
+                                {
+                                    _[requestId]?,
+                                    _[id]?,
+                                    _[refreshType]?,
+                                    stTime,
+                                    enTime,
+                                    _[status]?,
+                                    durationOfRefresh
+                                }
                     )
                 )
         in
