@@ -12,7 +12,7 @@ ID | Name | Description
 5 | Datasets | Contains table of all datasets and their refresh history in tenant but also it contains function for recieving refresh history of exact datasets.
 6 | Reports | Returns all reports in a tenant.
 7 | Dashboard | Return all dashboard in tenant and their tiles.
-8 | Metrics | Contains function to get Scorecards and Goals from selected Group (**YOU NEED TO HAVE ACCESS INTO THIS GROUP**)
+8 | Metrics | Contains function to get Scorecards and Goals from selected Group (**YOU NEED TO HAVE ACCESS INTO ITS GROUP**)
 9 | Apps | Returns all apps in a tenant.
 10 | Scanner API Functions | Library of functions dedicated to Scanner API.
 99 | Functions library | Special functions that can be used for further Admin view about tenant.
