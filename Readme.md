@@ -21,7 +21,7 @@ ID | Name | Description
 <details>
 <summary>Show hierarchy map of functions</summary>
 
-    .
+    Power BI ADMIN REST API [Connector]
     ├── Generic Informations About Tenant 
     │   ├── Avaiable Features
     │   ├── Capacities
