@@ -1,0 +1,4 @@
+{
+    "powerquery.general.experimental": true,
+    "powerquery.diagnostics.typeStrategy": "Extended"
+}
