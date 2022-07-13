@@ -230,7 +230,23 @@ DatasetsNavigation =
                             "RefreshesOfDataset",
                             pbiAdminAPI.RefreshesOfDataset,
                             "Function",
-                            "ArtifactAccess",
+                            "RefreshesOfDataset",
+                            true
+                        },
+                        {
+                            Extension.LoadString("ParametersOfDataset"),
+                            "ParametersOfDataset",
+                            pbiAdminAPI.ParametersOfDataset,
+                            "Function",
+                            "ParametersOfDataset",
+                            true
+                        },
+                        {
+                            Extension.LoadString("DatasourcesOfDataset"),
+                            "DatasourcesOfDataset",
+                            pbiAdminAPI.DatasourcesOfDataset,
+                            "Function",
+                            "DatasourcesOfDataset",
                             true
                         },
                         {
@@ -381,7 +397,7 @@ MetricsNavigation =
                         "IsLeaf"
                     },
                     {
-                          {
+                        {
                             Extension.LoadString("Scorecards"),
                             "Scorecards",
                             pbiAdminAPI.Scorecards,
@@ -411,6 +427,7 @@ MetricsNavigation =
                 )
         in
             Navigation;
+
 DashboardNavigation =
     () as table =>
         let
@@ -511,6 +528,14 @@ AboutTenantNavigation =
                             Extension.LoadString("Capacities"),
                             "Capacities",
                             pbiAdminAPI.Capacities(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("TenantKeys"),
+                            "TenantKeys",
+                            pbiAdminAPI.TenantKeys(),
                             "Table",
                             "Table",
                             true
@@ -915,7 +940,6 @@ pbiAdminAPI.RefreshesOfAllDatasets =
         in
             output;
 //**** Refresh history of Datasets
-//**** Scanner API - GET INFO()
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -1004,6 +1028,204 @@ RefreshesOfDataset =
                                                 _[status]?,
                                                 durationOfRefresh
                                             }
+                                )
+                            )
+                    in
+                        output
+                else
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Please fill parameter of function."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
+//**** Parameters of Datasets
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.ParametersOfDataset =
+    Value.ReplaceType(
+        ParametersOfDataset,
+        ParametersOfDatasetType
+    );
+
+ParametersOfDatasetType =
+    type function (optional datasetId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Dataset ID",
+                Documentation.FieldDescription = "Dataset ID for what will be returned its Parameters",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.ParametersOfDataset",
+        Documentation.LongDescription =
+            "Returns all parameters that are used in dataset. 
+        !!! THIS FUNCTION IS NOT WORKING WITH DATASET CONNECTED TO SQL, ORACLE, TERADATA, AND SAP HANA IN DIRECTQUERY MODE !!!",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.ParametersOfDataset(""xxx-xxxx-yyxa..."")",
+                Result = ""
+            ]
+        }
+    ];
+
+ParametersOfDataset =
+    (optional datasetId as text) =>
+        let
+            functionVarTester =
+                if (datasetId <> null and datasetId <> "") then
+                    let
+                        apiCall =
+                            Json.Document(
+                                Web.Contents(
+                                    api_uri,
+                                    [
+                                        RelativePath =
+                                            "admin/datasets/"
+                                            & datasetId
+                                            & "/parameters",
+                                        Headers = [
+                                            #"Content-Type" = "application/json"
+                                        ]
+                                    ]
+                                )
+                            )
+                                [value],
+                        output =
+                            #table(
+                                type table [
+                                    name = text,
+                                    #"type" = text,
+                                    isRequired = logical,
+                                    currentValue = text
+                                ],
+                                List.Transform(
+                                    apiCall,
+                                    each
+                                        {
+                                            _[name]?,
+                                            _[#"type"]?,
+                                            _[isRequired]?,
+                                            _[currentValue]?
+                                        }
+                                )
+                            )
+                    in
+                        output
+                else
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Please fill parameter of function."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
+//**** Datasources of Datasets
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.DatasourcesOfDataset =
+    Value.ReplaceType(
+        DatasourcesOfDataset,
+        DatasourcesOfDatasetType
+    );
+
+DatasourcesOfDatasetType =
+    type function (optional datasetId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Dataset ID",
+                Documentation.FieldDescription = "Dataset ID for what will be returned its Parameters",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.DatasourcesOfDataset",
+        Documentation.LongDescription =
+            "Returns datasources that are used in dataset. 
+        !!! THIS FUNCTION IS NOT WORKING WITH DATASET CONNECTED TO SQL, ORACLE, TERADATA, AND SAP HANA IN DIRECTQUERY MODE !!!",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.DatasourcesOfDataset(""xxx-xxxx-yyxa..."")",
+                Result = ""
+            ]
+        }
+    ];
+
+DatasourcesOfDataset =
+    (optional datasetId as text) =>
+        let
+            functionVarTester =
+                if (datasetId <> null and datasetId <> "") then
+                    let
+                        apiCall =
+                            Json.Document(
+                                Web.Contents(
+                                    api_uri,
+                                    [
+                                        RelativePath =
+                                            "admin/datasets/"
+                                            & datasetId
+                                            & "/datasources",
+                                        Headers = [
+                                            #"Content-Type" = "application/json"
+                                        ]
+                                    ]
+                                )
+                            )
+                                [value],
+                        output =
+                            #table(
+                                type table [
+                                    datasourceType = text,
+                                    datasourceId = text,
+                                    connectionDetails_account = text,
+                                    connectionDetails_domain = text,
+                                    connectionDetails_path = text,
+                                    connectionDetails_kind = text,
+                                    connectionDetails_url = text,
+                                    connectionDetails_connectionString = text,
+                                    connectionDetails_extensionDataSourceKind = text,
+                                    connectionDetails_extensionDataSourcePath = text,
+                                    gatewayId = text
+                                ],
+                                List.Transform(
+                                    apiCall,
+                                    each
+                                        {
+                                            _[datasourceType]?,
+                                            _[datasourceId]?,
+                                            _[connectionDetails]?[account]?,
+                                            _[connectionDetails]?[domain]?,
+                                            _[connectionDetails]?[path]?,
+                                            _[connectionDetails]?[kind]?,
+                                            _[connectionDetails]?[url]?,
+                                            _[connectionDetails]?[connectionString]?,
+                                            _[connectionDetails]?[extensionDataSourceKind]?,
+                                            _[connectionDetails]?[extensionDataSourcePath]?,
+                                            _[gatewayId]?
+                                        }
                                 )
                             )
                     in
@@ -1541,6 +1763,50 @@ pbiAdminAPI.Capacities =
                                 _[region]?,
                                 _[capacityUserAccessRight]?,
                                 _[tenantKeyId]?
+                            }
+                    )
+                )
+        in
+            output;
+//**** Encryption Keys
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.TenantKeys =
+    () =>
+        let
+            apiCall =
+                Json.Document(
+                    Web.Contents(
+                        api_uri,
+                        [
+                            RelativePath = "admin/tenantKeys",
+                            Headers = [
+                                #"Content-Type" = "application/json"
+                            ]
+                        ]
+                    )
+                ),
+            output =
+                #table(
+                    type table [
+                        id = text,
+                        name = text,
+                        keyVaultKeyIdentifier = text,
+                        isDefault = logical,
+                        createdAt = datetimezone,
+                        updatedAt = datetimezone
+                    ],
+                    List.Transform(
+                        apiCall[value],
+                        each
+                            {
+                                _[id]?,
+                                _[name]?,
+                                _[keyVaultKeyIdentifier]?,
+                                _[isDefault]?,
+                                DateTimeZone.From(_[createdAt]?),
+                                DateTimeZone.From(_[updatedAt]?)
                             }
                     )
                 )
