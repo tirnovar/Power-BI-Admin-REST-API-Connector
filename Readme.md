@@ -17,6 +17,55 @@ ID | Name | Description
 10 | Scanner API Functions | Library of functions dedicated to Scanner API.
 99 | Functions library | Special functions that can be used for further Admin view about tenant.
 
+## Functions hierarchy
+<details>
+<summary>Show hierarchy map of functions</summary>
+
+    .
+    ├── Generic Informations About Tenant 
+    │   ├── Avaiable Features
+    │   ├── Capacities
+    │   ├── Encryption Tenant Keys
+    │   ├── Imports
+    │   ├── Links shared to whole organization
+    │   ├── Reports published to Web
+    │   └── Unused Artifacts in Groups (All)
+    ├── Gateways
+    │   └── Gateways
+    ├── Groups & Workspaces
+    │   └── Groups
+    ├── Deployment Pipelines
+    │   └── Deployment Pipelines
+    ├── Dataflows
+    │   ├── Dataflows
+    │   └── Storage Accounts assigned with Dataflows
+    ├── Datasets
+    │   ├── Datasets
+    │   ├── Refreshables
+    │   ├── Refresh history of Datasets (All)
+    │   ├── (fx) Datasources of Dataset
+    │   ├── (fx) Parameters of Dataset
+    │   └── (fx) Refresh history of Dataset
+    ├── Reports
+    │   └── Reports
+    ├── Dashboard
+    │   ├── Dashboards
+    │   └── Tiles from Dashboards (All)
+    ├── Metrics
+    │   ├── (fx) Goals
+    │   └── (fx) Scorecards
+    ├── Apps
+    │   └── Apps
+    ├── Scanner API Functions
+    │   ├── (fx) Scanner API - Get Info
+    │   └── (fx) Scanner API - Result
+    └── Functions library
+        ├── (fx) Execute Query against dataset
+        ├── (fx) User - Artifact Access
+        └── (fx) User - Subscriptions
+        
+</details>
+
 ## Authentication method
 - by Organizational Account
 
