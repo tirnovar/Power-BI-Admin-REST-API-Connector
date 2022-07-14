@@ -78,5 +78,22 @@ ID | Name | Description
 4) Restart whole Power BI Desktop
 5) Find custom connector under: *Get Data -> Power Platform*
 
+## Backlog of topics and fixes
+<details>
+<summary>Show backlog</summary>
+
+- Activity Events
+- Datasources for Dataflows
+- List of workspace Ids as a source for Scanner API ( **Get Info()** )
+- Data Labels
+- Fucntion for Tiles in Dashboard (by Dashboard ID)
+- Function for Unused Artifacts (by Workspace ID)
+- Function for Users of App (App ID)
+- Function for Users of Dataset (Dataset ID)
+- Function for Users of Dashboard (Dashboard ID)
+- Function for Datasets to Dataflow Links (Dataset ID)
+
+</details>
+
 ## Feedback & Commentary
 This repository is public and open. You can make pull requests. Feedback can be provided by opening the Issue Ticket.
