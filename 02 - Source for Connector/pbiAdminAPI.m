@@ -3,8 +3,6 @@ section pbiAdminAPI;
 // OAuth Setup
 client_id = Text.FromBinary(Extension.Contents("AppID.txt"));
 
-client_secret = Text.FromBinary(Extension.Contents("ClientSecret.txt"));
-
 redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
 
 token_uri = "https://login.windows.net/common/oauth2/token";
