@@ -966,7 +966,7 @@ RefreshesOfDatasetType =
         Documentation.LongDescription = "Returns refresh history of selected Dataset and calculates refresh time.",
         Documentation.Examples = {
             [
-                Code = "=pbiAdminAPI.ScannerAPIInfo(""xxx-xxxx-yyxa..."")",
+                Code = "=pbiAdminAPI.RefreshesOfDataset(""xxx-xxxx-yyxa..."")",
                 Result = ""
             ]
         }
