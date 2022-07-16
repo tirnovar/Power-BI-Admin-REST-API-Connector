@@ -40,6 +40,7 @@ ID | Name | Description
     │   └── Deployment Pipelines
     ├── Dataflows
     │   ├── Dataflows
+    │   ├── Users of Dataflows
     │   └── Storage Accounts assigned with Dataflows
     ├── Datasets
     │   ├── Datasets
