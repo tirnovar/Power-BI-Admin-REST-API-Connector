@@ -246,6 +246,9 @@
   <data name="ScannerAPIStatusAndResult" xml:space="preserve">
     <value>Scanner API - Result</value>
   </data>
+  <data name="ScannerAPIModifiedWorkspaces" xml:space="preserve">
+    <value>Scanner API - Modified Workspaces</value>
+  </data>
   <data name="ExecuteQuery" xml:space="preserve">
     <value>Execute Query against dataset</value>
   </data>

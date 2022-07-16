@@ -371,6 +371,14 @@ ScannerNavigation = () as table =>
                     true
                 },
                 {
+                    Extension.LoadString("ScannerAPIModifiedWorkspaces"),
+                    "ScannerAPIModifiedWorkspaces",
+                    pbiAdminAPI.ScannerAPIModifiedWorkspaces(),
+                    "Table",
+                    "Table",
+                    true
+                },
+                {
                     Extension.LoadString("ScannerAPIStatusAndResult"),
                     "ScannerAPIStatusAndResult",
                     pbiAdminAPI.ScannerAPIStatusAndResult,
@@ -1813,6 +1821,27 @@ ScannerAPIStatusAndResult = (optional scanId as text) =>
                 #table(type table [Response = text], {{"Please fill parameter of function."}})
     in
         functionVarTester;
+
+//**** Table of Datasets
+[DataSource.Kind = "pbiAdminAPI"]
+pbiAdminAPI.ScannerAPIModifiedWorkspaces = () =>
+    let
+        apiCall = Json.Document(
+            Web.Contents(api_uri, [RelativePath = "admin/workspaces/modified", Headers = [#"Content-Type" = "application/json"]])
+        ),
+        output = 
+        #table(
+                        type table [WorkspaceId = text],
+                        List.Transform(
+                            apiCall,
+                            each
+                                {
+                                    _[id]
+                                }
+                        )
+                    )
+    in
+        output;
 
 //**** Execute Query
 [DataSource.Kind = "pbiAdminAPI"]
