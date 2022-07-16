@@ -6,7 +6,7 @@
 **FOR ALL THESE TOPICS IS REQUIRED TO HAVE POWER ADMIN RIGHTS**
 ID | Name | Description
 -- | ---- | ----------- 
-0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Capacities </code>.
+0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Capacities</code>.
 1 | Gateways | Contains information about gateways in tenants, even about personal gateways.
 2 | Groups & Workspaces | Returns all groups and workspace in a tenant.
 3 | Deployment Pipelines | Returns all deployment pipelines with their assigned groups and their tag by deployment progress.
@@ -70,7 +70,7 @@ ID | Name | Description
 </details>
 
 ## Authentication method
-- by Organizational Account
+- by Organizational Account *(most of the calls require Power BI Admin Permissions)*
 
 ## Installing steps
 1) Download actual version of connector (.mez file) from [Connector Folder](https://github.com/tirnovar/Power-BI-Admin-REST-API-Connector/tree/main/01%20-%20Connector)
