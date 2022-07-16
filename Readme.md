@@ -58,6 +58,7 @@ ID | Name | Description
     ├── Apps
     │   └── Apps
     ├── Scanner API Functions
+    │   ├── Scanner API - Modified Workspaces
     │   ├── (fx) Scanner API - Get Info
     │   └── (fx) Scanner API - Result
     └── Functions library
