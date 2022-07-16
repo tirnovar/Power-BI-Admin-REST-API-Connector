@@ -228,6 +228,9 @@
   <data name="Dataflows" xml:space="preserve">
     <value>Dataflows</value>
   </data>
+  <data name="DataflowsUsers" xml:space="preserve">
+    <value>Dataflows - Users</value>
+  </data>
   <data name="StorageAccounts" xml:space="preserve">
     <value>Storage Accounts assigned with Dataflows</value>
   </data>
