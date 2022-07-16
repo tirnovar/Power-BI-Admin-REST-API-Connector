@@ -57,7 +57,8 @@ ID | Name | Description
     │   ├── (fx) Goals
     │   └── (fx) Scorecards
     ├── Apps
-    │   └── Apps
+    │   ├── Apps
+    │   └── Users of Apps
     ├── Scanner API Functions
     │   ├── Scanner API - Modified Workspaces
     │   ├── (fx) Scanner API - Get Info
