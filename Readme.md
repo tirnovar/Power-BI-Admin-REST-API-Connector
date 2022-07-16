@@ -84,7 +84,6 @@ ID | Name | Description
 
 - Activity Events
 - Datasources for Dataflows
-- List of workspace Ids as a source for Scanner API ( **Get Info()** )
 - Data Labels
 - Fucntion for Tiles in Dashboard (by Dashboard ID)
 - Function for Unused Artifacts (by Workspace ID)
