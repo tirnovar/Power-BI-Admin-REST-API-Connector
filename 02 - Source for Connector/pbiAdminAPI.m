@@ -199,7 +199,10 @@ AppNavigation = () as table =>
     let
         objects = #table(
             {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
-            {{Extension.LoadString("Apps"), "Apps", pbiAdminAPI.Apps(), "Table", "Table", true}}
+            {
+                {Extension.LoadString("Apps"), "Apps", pbiAdminAPI.Apps(), "Table", "Table", true},
+                {Extension.LoadString("AppsUsers"), "AppsUsers", pbiAdminAPI.AppsUsers(), "Table", "Table", true}
+            }
         ),
         Navigation = Table.ToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in
@@ -831,6 +834,7 @@ DatasourcesOfDataset = (optional datasetId as text) =>
     in
         output;
 //** Apps
+//**** Apps
 [DataSource.Kind = "pbiAdminAPI"] pbiAdminAPI.Apps = () =>
     let
         apiCall = Json.Document(
@@ -855,6 +859,58 @@ DatasourcesOfDataset = (optional datasetId as text) =>
                     }
             )
         )
+    in
+        output;
+//**** Apps Users
+[DataSource.Kind = "pbiAdminAPI"] pbiAdminAPI.AppsUsers = () =>
+    let
+        apps = pbiAdminAPI.Apps()[[id]],
+        addon = Table.AddColumn(apps, "Users", each
+                    Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/apps/"&[id]&"/users",
+                                Headers = [#"Content-Type" = "application/json"],
+                                Query = [#"$top" = "5000"]
+                            ]
+                        )
+                    )[value]?, 
+                    type list
+                ),
+            expander = 
+                Table.ExpandTableColumn(
+                        addon, 
+                        "Users", 
+                        {
+                            "displayName",
+                            "emailAddress",
+                            "appUserAccessRight",
+                            "identifier",
+                            "graphId",
+                            "principalType"
+                        }, 
+                        {
+                            "displayName",
+                            "emailAddress",
+                            "appUserAccessRight",
+                            "identifier",
+                            "graphId",
+                            "principalType"
+                        }
+                    ),
+            output = 
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {"displayName", type text},
+                        {"emailAddress", type text},
+                        {"appUserAccessRight", type text},
+                        {"identifier", type text},
+                        {"graphId", type text},
+                        {"principalType", type text}
+                    }
+                )
     in
         output;
 //** Deployment Pipelines

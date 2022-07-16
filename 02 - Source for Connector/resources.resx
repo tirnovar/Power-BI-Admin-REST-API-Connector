@@ -189,6 +189,9 @@
   <data name="Apps" xml:space="preserve">
     <value>Apps</value>
   </data>
+  <data name="AppsUsers" xml:space="preserve">
+    <value>Apps - Users</value>
+  </data>
   <data name="Scorecards" xml:space="preserve">
     <value>Scorecards</value>
   </data>
