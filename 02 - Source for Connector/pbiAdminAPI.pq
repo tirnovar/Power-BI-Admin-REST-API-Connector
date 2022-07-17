@@ -457,6 +457,22 @@ DashboardNavigation =
                             true
                         },
                         {
+                            Extension.LoadString("DashboardsUsers"),
+                            "DashboardsUsers",
+                            pbiAdminAPI.DashboardsUsers(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("DashboardsSubscriptions"),
+                            "DashboardsSubscriptions",
+                            pbiAdminAPI.DashboardsSubscriptions(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
                             Extension.LoadString("Tiles"),
                             "Tiles",
                             pbiAdminAPI.Tiles(),
@@ -534,6 +550,22 @@ AboutTenantNavigation =
                             Extension.LoadString("Capacities"),
                             "Capacities",
                             pbiAdminAPI.Capacities(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("WorkloadsOfCapacities"),
+                            "WorkloadsOfCapacities",
+                            pbiAdminAPI.WorkloadsOfCapacities(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("CapacitiesUsers"),
+                            "CapacitiesUsers",
+                            pbiAdminAPI.CapacitiesUsers(),
                             "Table",
                             "Table",
                             true
@@ -1631,6 +1663,241 @@ pbiAdminAPI.Dashboards =
                 )
         in
             output;
+//**** Users of Dashboards
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.DashboardsUsers =
+    () =>
+        let
+            capacities = pbiAdminAPI.Dashboards()[[id]],
+            addon =
+                Table.AddColumn(
+                    apps,
+                    "Users",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/dashboards/" & [id] & "/users",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Users",
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "dashboardUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    },
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "dashboardUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "displayName",
+                            type text
+                        },
+                        {
+                            "emailAddress",
+                            type text
+                        },
+                        {
+                            "dashboardUserAccessRight",
+                            type text
+                        },
+                        {
+                            "identifier",
+                            type text
+                        },
+                        {
+                            "graphId",
+                            type text
+                        },
+                        {
+                            "principalType",
+                            type text
+                        }
+                    }
+                )
+        in
+            output;
+//**** Subscriptions of Dashboards
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.DashboardsSubscriptions =
+    () =>
+        let
+            capacities = pbiAdminAPI.Dashboards()[[id]],
+            addon =
+                Table.AddColumn(
+                    apps,
+                    "Subscriptions",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/dashboards/" & [id] & "/subscriptions",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+
+                                            #table(
+                                type table [
+                                    id = text,
+                                    title = text,
+                                    artifactId = text,
+                                    artifactDislayName = text,
+                                    subArtifactDisplayName = text,
+                                    artifactType = text,
+                                    isEnabled = logical,
+                                    frequency = text,
+                                    startDate = datetime,
+                                    endDate = datetime,
+                                    linkToContent = logical,
+                                    previewImage = logical,
+                                    attachmentFormat = text,
+                                    users = list
+                                ],
+                                List.Transform(
+                                    List.RemoveNulls(unitor),
+                                    each
+                                        {
+                                            _[id]?,
+                                            _[tite]?,
+                                            _[artifactId]?,
+                                            _[artifactDislayName]?,
+                                            _[subArtifactDisplayName]?,
+                                            _[artifactType]?,
+                                            _[isEnabled]?,
+                                            _[frequency]?,
+                                            _[startDate]?,
+                                            _[endDate]?,
+                                            _[linkToContent]?,
+                                            _[previewImage]?,
+                                            _[attachmentFormat]?,
+                                            _[users]?
+                                        }
+                                )
+                            )
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Subscriptions",
+                    {
+                        "id",
+                        "title",
+                        "artifactId",
+                        "artifactDislayName",
+                        "artifactType",
+                        "isEnabled",
+                        "frequency",
+                        "startDate",
+                        "endDate",
+                        "linkToContent",
+                        "previewImage",
+                        "users"
+                    },
+                    {
+                        "subscriptionId",
+                        "title",
+                        "artifactId",
+                        "artifactDisplayName",
+                        "artifactType",
+                        "isEnabled",
+                        "frequency",
+                        "startDate",
+                        "endDate",
+                        "linkToContent",
+                        "previewImage",
+                        "users"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "subscriptionId",
+                            type text
+                        },
+                        {
+                            "title",
+                            type text
+                        },
+                        {
+                            "artifactId",
+                            type text
+                        },
+                        {
+                            "artifactDislayName",
+                            type text
+                        },
+                        {
+                            "artifactType",
+                            type text
+                        },
+                        {
+                            "isEnabled",
+                            type logical
+                        },
+                        {
+                            "frequency",
+                            type text
+                        },
+                        {
+                            "startDate",
+                            type datetime
+                        },
+                        {
+                            "endDate",
+                            type datetime
+                        },
+                        {
+                            "linkToContent",
+                            type logical
+                        },
+                        {
+                            "previewImage",
+                            type logical
+                        },
+                        {
+                            "users",
+                            type list
+                        },
+                    }
+                )
+        in
+            output;
 //**** Tiles
 [
     DataSource.Kind = "pbiAdminAPI"
@@ -1948,6 +2215,148 @@ pbiAdminAPI.Capacities =
                                 _[tenantKeyId]?
                             }
                     )
+                )
+        in
+            output;
+//**** Workloads of Capacities
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.WorkloadsOfCapacities =
+    () =>
+        let
+            capacities = pbiAdminAPI.Capacities()[[id]],
+            addon =
+                Table.AddColumn(
+                    apps,
+                    "Workloads",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "capacities/" & [id] & "/Workloads",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Workloads",
+                    {
+                        "state",
+                        "name",
+                        "maxMemoryPercentageSetByUser"
+                    },
+                    {
+                        "state",
+                        "name",
+                        "maxMemoryPercentageSetByUser"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "state",
+                            type text
+                        },
+                        {
+                            "name",
+                            type text
+                        },
+                        {
+                            "maxMemoryPercentageSetByUser",
+                            type text
+                        }
+                    }
+                )
+        in
+            output;
+//**** Users of Capacities
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.CapacitiesUsers =
+    () =>
+        let
+            capacities = pbiAdminAPI.Capacities()[[id]],
+            addon =
+                Table.AddColumn(
+                    apps,
+                    "Users",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/capacities/" & [id] & "/users",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Users",
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "capacityUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    },
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "capacityUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "displayName",
+                            type text
+                        },
+                        {
+                            "emailAddress",
+                            type text
+                        },
+                        {
+                            "capacityUserAccessRight",
+                            type text
+                        },
+                        {
+                            "identifier",
+                            type text
+                        },
+                        {
+                            "graphId",
+                            type text
+                        },
+                        {
+                            "principalType",
+                            type text
+                        }
+                    }
                 )
         in
             output;

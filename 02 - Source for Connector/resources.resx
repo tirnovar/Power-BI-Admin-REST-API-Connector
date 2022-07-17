@@ -204,6 +204,12 @@
   <data name="Dashboards" xml:space="preserve">
     <value>Dashboards</value>
   </data>
+  <data name="DashboardsUsers" xml:space="preserve">
+    <value>Dashboards - Users</value>
+  </data>
+  <data name="DashboardsSubscriptions" xml:space="preserve">
+    <value>Dashboards - Subscriptions</value>
+  </data>
   <data name="Tiles" xml:space="preserve">
     <value>Tiles from Dashboards (ALL)</value>
   </data>
@@ -236,6 +242,12 @@
   </data>
   <data name="Capacities" xml:space="preserve">
     <value>Capacities</value>
+  </data>
+  <data name="WorkloadsOfCapacities" xml:space="preserve">
+    <value>Capacities - Workloads</value>
+  </data>
+  <data name="CapacitiesUsers" xml:space="preserve">
+    <value>Capacities - Users</value>
   </data>
   <data name="TenantKeys" xml:space="preserve">
     <value>Encryption Tenant Keys</value>

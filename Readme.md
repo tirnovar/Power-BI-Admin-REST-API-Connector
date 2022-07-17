@@ -27,6 +27,8 @@ ID | Name | Description
     ├── Generic Informations About Tenant 
     │   ├── Avaiable Features
     │   ├── Capacities
+    │   ├── Workloads of Capacities
+    │   ├── Users of Capacities
     │   ├── Encryption Tenant Keys
     │   ├── Imports
     │   ├── Links shared to whole organization
@@ -53,6 +55,8 @@ ID | Name | Description
     │   └── Reports
     ├── Dashboard
     │   ├── Dashboards
+    │   ├── Users of Dashboards
+    │   ├── Subscriptions of Dashboards
     │   └── Tiles from Dashboards (All)
     ├── Metrics
     │   ├── (fx) Goals
@@ -89,11 +93,8 @@ ID | Name | Description
 - Activity Events
 - Datasources for Dataflows
 - Data Labels
-- Fucntion for Tiles in Dashboard (by Dashboard ID)
+- Function for Tiles in Dashboard (by Dashboard ID)
 - Function for Unused Artifacts (by Workspace ID)
-- Function for Users of App (App ID)
-- Function for Users of Dataset (Dataset ID)
-- Function for Users of Dashboard (Dashboard ID)
 - Function for Datasets to Dataflow Links (Dataset ID)
 
 </details>
