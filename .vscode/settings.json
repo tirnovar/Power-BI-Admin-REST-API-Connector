@@ -1,5 +1,5 @@
 {
-    "powerquery.general.experimental": true,
-    "powerquery.diagnostics.typeStrategy": "Extended",
+    "powerquery.general.experimental": false,
+    "powerquery.diagnostics.typeStrategy": "Primitive",
     "powerquery.general.mode": "SDK"
 }

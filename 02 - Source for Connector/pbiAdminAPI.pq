@@ -1670,10 +1670,10 @@ pbiAdminAPI.Dashboards =
 pbiAdminAPI.DashboardsUsers =
     () =>
         let
-            capacities = pbiAdminAPI.Dashboards()[[id]],
+            dashboards = pbiAdminAPI.Dashboards()[[id]],
             addon =
                 Table.AddColumn(
-                    apps,
+                    dashboards,
                     "Users",
                     each
                         Json.Document(
@@ -1750,10 +1750,10 @@ pbiAdminAPI.DashboardsUsers =
 pbiAdminAPI.DashboardsSubscriptions =
     () =>
         let
-            capacities = pbiAdminAPI.Dashboards()[[id]],
+            dashboards = pbiAdminAPI.Dashboards()[[id]],
             addon =
                 Table.AddColumn(
-                    apps,
+                    dashboards,
                     "Subscriptions",
                     each
                         Json.Document(
@@ -1770,45 +1770,6 @@ pbiAdminAPI.DashboardsSubscriptions =
                             [value]?,
                     type list
                 ),
-
-                                            #table(
-                                type table [
-                                    id = text,
-                                    title = text,
-                                    artifactId = text,
-                                    artifactDislayName = text,
-                                    subArtifactDisplayName = text,
-                                    artifactType = text,
-                                    isEnabled = logical,
-                                    frequency = text,
-                                    startDate = datetime,
-                                    endDate = datetime,
-                                    linkToContent = logical,
-                                    previewImage = logical,
-                                    attachmentFormat = text,
-                                    users = list
-                                ],
-                                List.Transform(
-                                    List.RemoveNulls(unitor),
-                                    each
-                                        {
-                                            _[id]?,
-                                            _[tite]?,
-                                            _[artifactId]?,
-                                            _[artifactDislayName]?,
-                                            _[subArtifactDisplayName]?,
-                                            _[artifactType]?,
-                                            _[isEnabled]?,
-                                            _[frequency]?,
-                                            _[startDate]?,
-                                            _[endDate]?,
-                                            _[linkToContent]?,
-                                            _[previewImage]?,
-                                            _[attachmentFormat]?,
-                                            _[users]?
-                                        }
-                                )
-                            )
             expander =
                 Table.ExpandTableColumn(
                     addon,
@@ -1893,7 +1854,7 @@ pbiAdminAPI.DashboardsSubscriptions =
                         {
                             "users",
                             type list
-                        },
+                        }
                     }
                 )
         in
@@ -2228,7 +2189,7 @@ pbiAdminAPI.WorkloadsOfCapacities =
             capacities = pbiAdminAPI.Capacities()[[id]],
             addon =
                 Table.AddColumn(
-                    apps,
+                    capacities,
                     "Workloads",
                     each
                         Json.Document(
@@ -2290,7 +2251,7 @@ pbiAdminAPI.CapacitiesUsers =
             capacities = pbiAdminAPI.Capacities()[[id]],
             addon =
                 Table.AddColumn(
-                    apps,
+                    capacities,
                     "Users",
                     each
                         Json.Document(
