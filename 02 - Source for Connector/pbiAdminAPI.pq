@@ -2,6 +2,7 @@ section pbiAdminAPI;
 
 // OAuth Setup
 client_id = Text.FromBinary(Extension.Contents("AppID.txt"));
+
 client_secret = Text.FromBinary(Extension.Contents("ClientSecret.txt"));
 
 redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
@@ -362,7 +363,7 @@ ReportsNavigation =
                             "Table",
                             true
                         },
-                         {
+                        {
                             Extension.LoadString("ReportsSubscriptions"),
                             "ReportsSubscriptions",
                             pbiAdminAPI.ReportsSubscriptions(),
@@ -496,8 +497,7 @@ MetricsNavigation =
                             "Function",
                             "Goals",
                             true
-                        }
-                        ,
+                        },
                         {
                             Extension.LoadString("GoalValuesAndNotes"),
                             "GoalValuesAndNotes",
@@ -1590,10 +1590,7 @@ pbiAdminAPI.ReportsSubscriptions =
                             Web.Contents(
                                 api_uri,
                                 [
-                                    RelativePath =
-                                        "admin/reports/"
-                                        & [id]
-                                        & "/subscriptions",
+                                    RelativePath = "admin/reports/" & [id] & "/subscriptions",
                                     Headers = [
                                         #"Content-Type" = "application/json"
                                     ]
@@ -2414,7 +2411,7 @@ pbiAdminAPI.Gateways =
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
-pbiAdminAPI. GatewaysDatasources =
+pbiAdminAPI.GatewaysDatasources =
     () =>
         let
             gateways = pbiAdminAPI.Gateways()[[id]],
@@ -2424,20 +2421,24 @@ pbiAdminAPI. GatewaysDatasources =
                     "DataSources",
                     each
                         try
-                        Json.Document(
-                            Web.Contents(
-                                api_uri,
-                                [
-                                    RelativePath = "gateways/" & [id] & "/datasources",
-                                    Headers = [
-                                        #"Content-Type" = "application/json"
+                            Json.Document(
+                                Web.Contents(
+                                    api_uri,
+                                    [
+                                        RelativePath = "gateways/" & [id] & "/datasources",
+                                        Headers = [
+                                            #"Content-Type" = "application/json"
+                                        ]
                                     ]
-                                ]
+                                )
                             )
-                        )
-                            [value]?
+                                [value]?
                         otherwise
-                            {[Response="You are not Admin of this Gateway."]},
+                            {
+                                [
+                                    Response = "You are not Admin of this Gateway."
+                                ]
+                            },
                     type list
                 ),
             expander =
@@ -3584,7 +3585,11 @@ Goals =
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
-shared pbiAdminAPI.GoalValuesAndNotes = Value.ReplaceType(GoalValuesAndNotes, GoalValuesAndNotesType);
+shared pbiAdminAPI.GoalValuesAndNotes =
+    Value.ReplaceType(
+        GoalValuesAndNotes,
+        GoalValuesAndNotesType
+    );
 
 GoalValuesAndNotesType =
     type function (optional workspaceId as
@@ -3609,8 +3614,7 @@ GoalValuesAndNotesType =
                     "xxx-xxxx-yyxa..."
                 }
             ]
-        )
-        , optional goalId as
+        ), optional goalId as
         (
             type text
             meta
@@ -3639,7 +3643,11 @@ GoalValuesAndNotesType =
 GoalValuesAndNotes =
     (optional workspaceId as text, optional scorecardId as text, optional goalId as text) =>
         let
-            params = {workspaceId,scorecardId,goalId},
+            params = {
+                workspaceId,
+                scorecardId,
+                goalId
+            },
             functionVarTester =
                 try
                     if
@@ -3659,7 +3667,9 @@ GoalValuesAndNotes =
                                                 & "/goals("
                                                 & goalId
                                                 & ")/goalValues",
-                                            Query = [#"$expand"="notes"],
+                                            Query = [
+                                                #"$expand" = "notes"
+                                            ],
                                             Headers = [
                                                 #"Content-Type" = "application/json"
                                             ]
@@ -3688,7 +3698,6 @@ GoalValuesAndNotes =
                                                 _[target]?,
                                                 _[status]?,
                                                 _[notes]?
-
                                             }
                                     )
                                 )
