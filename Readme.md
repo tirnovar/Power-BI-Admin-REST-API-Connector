@@ -54,7 +54,8 @@ ID | Name | Description
     │   └── (fx) Refresh history of Dataset
     ├── Reports
     │   ├── Reports
-    │   └── Users of Reports
+    │   ├── Users of Reports
+    │   └── Subscriptions of Reports
     ├── Dashboard
     │   ├── Dashboards
     │   ├── Users of Dashboards

@@ -361,6 +361,14 @@ ReportsNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                         {
+                            Extension.LoadString("ReportsSubscriptions"),
+                            "ReportsSubscriptions",
+                            pbiAdminAPI.ReportsSubscriptions(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -1543,6 +1551,131 @@ pbiAdminAPI.ReportsUsers =
                         {
                             "principalType",
                             type text
+                        }
+                    }
+                )
+        in
+            output;
+//**** Subscriptions of Reports
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ReportsSubscriptions =
+    () =>
+        let
+            reports = pbiAdminAPI.Reports()[[id]],
+            addon =
+                Table.AddColumn(
+                    reports,
+                    "Subscriptions",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath =
+                                        "admin/reports/"
+                                        & [id]
+                                        & "/subscriptions",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Subscriptions",
+                    {
+                        "id",
+                        "title",
+                        "artifactId",
+                        "artifactDislayName",
+                        "subArtifactDislayName",
+                        "isEnabled",
+                        "frequency",
+                        "startDate",
+                        "endDate",
+                        "linkToContent",
+                        "previewImage",
+                        "attachmentFormat",
+                        "users"
+                    },
+                    {
+                        "subscriptionId",
+                        "title",
+                        "artifactId",
+                        "artifactDisplayName",
+                        "subArtifactDislayName",
+                        "isEnabled",
+                        "frequency",
+                        "startDate",
+                        "endDate",
+                        "linkToContent",
+                        "previewImage",
+                        "attachmentFormat",
+                        "users"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "subscriptionId",
+                            type text
+                        },
+                        {
+                            "title",
+                            type text
+                        },
+                        {
+                            "artifactId",
+                            type text
+                        },
+                        {
+                            "artifactDislayName",
+                            type text
+                        },
+                        {
+                            "subArtifactDislayName",
+                            type text
+                        },
+                        {
+                            "isEnabled",
+                            type logical
+                        },
+                        {
+                            "frequency",
+                            type text
+                        },
+                        {
+                            "startDate",
+                            type datetime
+                        },
+                        {
+                            "endDate",
+                            type datetime
+                        },
+                        {
+                            "linkToContent",
+                            type logical
+                        },
+                        {
+                            "previewImage",
+                            type logical
+                        },
+                        {
+                            "attachmentFormat",
+                            type text
+                        },
+                        {
+                            "users",
+                            type list
                         }
                     }
                 )
