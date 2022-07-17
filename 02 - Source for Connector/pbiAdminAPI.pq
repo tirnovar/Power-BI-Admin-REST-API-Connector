@@ -3792,7 +3792,7 @@ ScannerAPIInfo =
                             (wsId as text) =>
                                 Json.Document(
                                     Web.Contents(
-                                        "https://api.powerbi.com/v1.0/myorg/",
+                                        api_uri,
                                         [
                                             RelativePath = "admin/workspaces/getInfo?lineage=True&datasourceDetails=True&datasetSchema=True&datasetExpressions=True&getArtifactUsers=True",
                                             Headers = [
@@ -3896,7 +3896,7 @@ ScannerAPIStatusAndResult =
                         statusCall =
                             Json.Document(
                                 Web.Contents(
-                                    "https://api.powerbi.com/v1.0/myorg",
+                                    api_uri,
                                     [
                                         RelativePath = "admin/workspaces/scanStatus/" & scanId,
                                         Headers = [
@@ -3912,7 +3912,7 @@ ScannerAPIStatusAndResult =
                                     resultCall =
                                         Json.Document(
                                             Web.Contents(
-                                                "https://api.powerbi.com/v1.0/myorg",
+                                                api_uri,
                                                 [
                                                     RelativePath = "admin/workspaces/scanResult/" & scanId,
                                                     Headers = [
@@ -4089,7 +4089,7 @@ ExecuteQuery =
                         apiCall =
                             Json.Document(
                                 Web.Contents(
-                                    "https://api.powerbi.com/v1.0/myorg/",
+                                    api_uri,
                                     [
                                         RelativePath =
                                             "datasets/"
