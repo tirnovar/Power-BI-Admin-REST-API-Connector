@@ -26,9 +26,6 @@ ID | Name | Description
     Power BI ADMIN REST API [Connector]
     ├── Generic Informations About Tenant 
     │   ├── Avaiable Features
-    │   ├── Capacities
-    │   ├── Workloads of Capacities
-    │   ├── Users of Capacities
     │   ├── Encryption Tenant Keys
     │   ├── Imports
     │   ├── Links shared to whole organization
@@ -36,6 +33,10 @@ ID | Name | Description
     │   └── Unused Artifacts in Groups (All)
     ├── Gateways
     │   └── Gateways
+    ├── Capacities
+    │   ├── Capacities
+    │   ├── Workloads of Capacities
+    │   └── Users of Capacities
     ├── Groups & Workspaces
     │   └── Groups
     ├── Deployment Pipelines

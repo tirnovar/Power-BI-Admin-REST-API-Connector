@@ -61,6 +61,14 @@ pbiAdminAPI.Navigation =
                             false
                         },
                         {
+                            Extension.LoadString("CapacitiesAdmin"),
+                            "CapacitiesAdmin",
+                            CapacitiesNavigation(),
+                            "Folder",
+                            "CapacitiesAdmin",
+                            false
+                        },
+                        {
                             Extension.LoadString("DatasetsAdmin"),
                             "DatasetsAdmin",
                             DatasetsNavigation(),
@@ -174,6 +182,59 @@ GroupsNavigation =
                             Extension.LoadString("Groups"),
                             "Groups & Workspaces",
                             pbiAdminAPI.Groups(),
+                            "Table",
+                            "Table",
+                            true
+                        }
+                    }
+                ),
+            Navigation =
+                Table.ToNavigationTable(
+                    objects,
+                    {"Key"},
+                    "Name",
+                    "Data",
+                    "ItemKind",
+                    "ItemName",
+                    "IsLeaf"
+                )
+        in
+            Navigation;
+
+CapacitiesNavigation =
+    () as table =>
+        let
+            objects =
+                #table(
+                    {
+                        "Name",
+                        "Key",
+                        "Data",
+                        "ItemKind",
+                        "ItemName",
+                        "IsLeaf"
+                    },
+                    {
+                        {
+                            Extension.LoadString("Capacities"),
+                            "Capacities",
+                            pbiAdminAPI.Capacities(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("WorkloadsOfCapacities"),
+                            "WorkloadsOfCapacities",
+                            pbiAdminAPI.WorkloadsOfCapacities(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("CapacitiesUsers"),
+                            "CapacitiesUsers",
+                            pbiAdminAPI.CapacitiesUsers(),
                             "Table",
                             "Table",
                             true
@@ -546,30 +607,6 @@ AboutTenantNavigation =
                         "IsLeaf"
                     },
                     {
-                        {
-                            Extension.LoadString("Capacities"),
-                            "Capacities",
-                            pbiAdminAPI.Capacities(),
-                            "Table",
-                            "Table",
-                            true
-                        },
-                        {
-                            Extension.LoadString("WorkloadsOfCapacities"),
-                            "WorkloadsOfCapacities",
-                            pbiAdminAPI.WorkloadsOfCapacities(),
-                            "Table",
-                            "Table",
-                            true
-                        },
-                        {
-                            Extension.LoadString("CapacitiesUsers"),
-                            "CapacitiesUsers",
-                            pbiAdminAPI.CapacitiesUsers(),
-                            "Table",
-                            "Table",
-                            true
-                        },
                         {
                             Extension.LoadString("TenantKeys"),
                             "TenantKeys",

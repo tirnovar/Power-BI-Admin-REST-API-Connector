@@ -126,41 +126,44 @@
   <data name="DataSourceLabel" xml:space="preserve">
     <value>Power BI ADMIN REST API</value>
   </data>
-  <data name="GroupsAdmin" xml:space="preserve">
-    <value>02 - Groups</value>
-  </data>
-  <data name="DatasetsAdmin" xml:space="preserve">
-    <value>05 - Datasets</value>
-  </data>
-  <data name="DataflowsAdmin" xml:space="preserve">
-    <value>04 - Dataflows</value>
-  </data>
-  <data name="ReportsAdmin" xml:space="preserve">
-    <value>06 - Reports</value>
-  </data>
-  <data name="AppAdmin" xml:space="preserve">
-    <value>09 - Apps</value>
-  </data>
-  <data name="DeploymentPipelinesAdmin" xml:space="preserve">
-    <value>03 - Deployment Pipelines</value>
-  </data>
-  <data name="DashboardsAdmin" xml:space="preserve">
-    <value>07 - Dashboard</value>
-  </data>
   <data name="AboutTenantAdmin" xml:space="preserve">
     <value>00 - Generic Informations About Tenant</value>
-  </data>
-  <data name="FunctionsAdmin" xml:space="preserve">
-    <value>99 - Functions library</value>
   </data>
   <data name="GatewaysAdmin" xml:space="preserve">
     <value>01 - Gateways</value>
   </data>
-  <data name="ScannerAdmin" xml:space="preserve">
-    <value>10 - Scanner API Functions</value>
+  <data name="CapacitiesAdmin" xml:space="preserve">
+    <value>02 - Capacities</value>
+  </data>
+  <data name="GroupsAdmin" xml:space="preserve">
+    <value>03 - Groups</value>
+  </data>
+  <data name="DeploymentPipelinesAdmin" xml:space="preserve">
+    <value>04 - Deployment Pipelines</value>
+  </data>
+  <data name="DataflowsAdmin" xml:space="preserve">
+    <value>05 - Dataflows</value>
+  </data>
+  <data name="DatasetsAdmin" xml:space="preserve">
+    <value>06 - Datasets</value>
+  </data>
+  <data name="ReportsAdmin" xml:space="preserve">
+    <value>07 - Reports</value>
+  </data>
+  <data name="DashboardsAdmin" xml:space="preserve">
+    <value>08 - Dashboard</value>
   </data>
   <data name="MetricsAdmin" xml:space="preserve">
-    <value>08 - Metrics</value>
+    <value>09 - Metrics</value>
+  </data>
+  <data name="AppAdmin" xml:space="preserve">
+    <value>10 - Apps</value>
+  </data>
+  <data name="ScannerAdmin" xml:space="preserve">
+    <value>11 - Scanner API Functions</value>
+  </data>
+  <data name="FunctionsAdmin" xml:space="preserve">
+    <value>99 - Functions library</value>
   </data>
   <data name="Groups" xml:space="preserve">
     <value>Groups</value>
