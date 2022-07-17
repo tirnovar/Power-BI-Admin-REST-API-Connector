@@ -1760,7 +1760,10 @@ pbiAdminAPI.DashboardsSubscriptions =
                             Web.Contents(
                                 api_uri,
                                 [
-                                    RelativePath = "admin/dashboards/" & [id] & "/subscriptions",
+                                    RelativePath =
+                                        "admin/dashboards/"
+                                        & [id]
+                                        & "/subscriptions",
                                     Headers = [
                                         #"Content-Type" = "application/json"
                                     ]
