@@ -603,6 +603,14 @@ GatewaysNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                        {
+                            Extension.LoadString("GatewaysDatasources"),
+                            "GatewaysDatasources",
+                            pbiAdminAPI.GatewaysDatasources(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -2399,6 +2407,89 @@ pbiAdminAPI.Gateways =
                                 _[maxPermission]?
                             }
                     )
+                )
+        in
+            output;
+//**** Datasources of Gateways
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI. GatewaysDatasources =
+    () =>
+        let
+            gateways = pbiAdminAPI.Gateways()[[id]],
+            addon =
+                Table.AddColumn(
+                    gateways,
+                    "DataSources",
+                    each
+                        try
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "gateways/" & [id] & "/datasources",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?
+                        otherwise
+                            {[Response="You are not Admin of this Gateway."]},
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "DataSources",
+                    {
+                        "id",
+                        "datasourceType",
+                        "connectionDetails",
+                        "credentialType",
+                        "datasourceName",
+                        "Response"
+                    },
+                    {
+                        "datasourceId",
+                        "datasourceType",
+                        "connectionDetails",
+                        "credentialType",
+                        "datasourceName",
+                        "Response"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "datasourceId",
+                            type text
+                        },
+                        {
+                            "datasourceType",
+                            type text
+                        },
+                        {
+                            "connectionDetails",
+                            type text
+                        },
+                        {
+                            "credentialType",
+                            type text
+                        },
+                        {
+                            "datasourceName",
+                            type text
+                        },
+                        {
+                            "Response",
+                            type text
+                        }
+                    }
                 )
         in
             output;

@@ -32,7 +32,8 @@ ID | Name | Description
     │   ├── Reports published to Web
     │   └── Unused Artifacts in Groups (All)
     ├── Gateways
-    │   └── Gateways
+    │   ├── Gateways
+    │   └── Gateways Datasources
     ├── Capacities
     │   ├── Capacities
     │   ├── Workloads of Capacities

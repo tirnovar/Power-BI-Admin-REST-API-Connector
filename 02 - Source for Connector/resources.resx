@@ -228,6 +228,9 @@
   <data name="Gateways" xml:space="preserve">
     <value>Gateways</value>
   </data>
+  <data name="GatewaysDatasources" xml:space="preserve">
+    <value>Datasources of Gateways</value>
+  </data>
   <data name="Imports" xml:space="preserve">
     <value>Imports</value>
   </data>
