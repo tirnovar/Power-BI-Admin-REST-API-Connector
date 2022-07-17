@@ -207,6 +207,9 @@
   <data name="Goals" xml:space="preserve">
     <value>Goals</value>
   </data>
+  <data name="GoalValuesAndNotes" xml:space="preserve">
+    <value>Goal Values And Notes</value>
+  </data>
   <data name="DeploymentPipelines" xml:space="preserve">
     <value>Deployment Pipelines</value>
   </data>

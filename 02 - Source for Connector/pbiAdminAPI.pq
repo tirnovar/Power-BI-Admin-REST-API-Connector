@@ -497,6 +497,15 @@ MetricsNavigation =
                             "Goals",
                             true
                         }
+                        ,
+                        {
+                            Extension.LoadString("GoalValuesAndNotes"),
+                            "GoalValuesAndNotes",
+                            pbiAdminAPI.GoalValuesAndNotes,
+                            "Function",
+                            "GoalValuesAndNotes",
+                            true
+                        }
                     }
                 ),
             Navigation =
@@ -3454,6 +3463,141 @@ Goals =
                                                 _[level]?,
                                                 _[rank]?,
                                                 _[additionalOwners]?
+                                            }
+                                    )
+                                )
+                        in
+                            output
+                    else
+                        #table(
+                            type table [Response = text],
+                            {
+                                {
+                                    "Please fill parameters of function."
+                                }
+                            }
+                        )
+                otherwise
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Hmm... Something is not quite right. Please check inserted parameters or try it later."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
+//**** Goals
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.GoalValuesAndNotes = Value.ReplaceType(GoalValuesAndNotes, GoalValuesAndNotesType);
+
+GoalValuesAndNotesType =
+    type function (optional workspaceId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Workspace ID",
+                Documentation.FieldDescription = "Workspace ID where is scorecard stored.",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        ), optional scorecardId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Scorecard ID",
+                Documentation.FieldDescription = "Scorecard ID from where you want to recieve Values and Notes.",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )
+        , optional goalId as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Goal ID",
+                Documentation.FieldDescription = "Goal ID from where you want to recieve Values and Notes.",
+                Documentation.SampleValues = {
+                    "xxx-xxxx-yyxa..."
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.GoalValuesAndNotes",
+        Documentation.LongDescription =
+            "!!! This call can be used only on Groups where you have access !!!
+        Returns for selected goal its values and notes that are from selected scorecard and in selected workspace.",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.GoalValuesAndNotes(""xxx-xxxx-yyxa..."",""xxx-xxxx-yyxa..."",,""xxx-xxxx-yyxa..."")",
+                Result = ""
+            ]
+        }
+    ];
+
+GoalValuesAndNotes =
+    (optional workspaceId as text, optional scorecardId as text, optional goalId as text) =>
+        let
+            params = {workspaceId,scorecardId,goalId},
+            functionVarTester =
+                try
+                    if
+                        (not List.Contains(params, "")) and (not List.Contains(params, null))
+                    then
+                        let
+                            apiCall =
+                                Json.Document(
+                                    Web.Contents(
+                                        api_uri,
+                                        [
+                                            RelativePath =
+                                                "groups/"
+                                                & workspaceId
+                                                & "/scorecards/"
+                                                & scorecardId
+                                                & "/goals("
+                                                & goalId
+                                                & ")/goalValues",
+                                            Query = [#"$expand"="notes"],
+                                            Headers = [
+                                                #"Content-Type" = "application/json"
+                                            ]
+                                        ]
+                                    )
+                                ),
+                            output =
+                                #table(
+                                    type table [
+                                        timestamp = datetime,
+                                        createdTime = datetime,
+                                        lastModifiedTime = datetime,
+                                        value = number,
+                                        target = number,
+                                        status = number,
+                                        notes = list
+                                    ],
+                                    List.Transform(
+                                        apiCall[value],
+                                        each
+                                            {
+                                                DateTime.From(_[timestamp]?),
+                                                DateTime.From(_[createdTime]?),
+                                                DateTime.From(_[lastModifiedTime]?),
+                                                _[value]?,
+                                                _[target]?,
+                                                _[status]?,
+                                                _[notes]?
+
                                             }
                                     )
                                 )

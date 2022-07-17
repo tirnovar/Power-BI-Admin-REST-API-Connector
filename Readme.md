@@ -63,6 +63,7 @@ ID | Name | Description
     │   └── Tiles from Dashboards (All)
     ├── Metrics
     │   ├── (fx) Goals
+    │   ├── (fx) Goal Values and Notes
     │   └── (fx) Scorecards
     ├── Apps
     │   ├── Apps

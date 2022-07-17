@@ -2,6 +2,6 @@
     "powerquery.general.experimental": false,
     "powerquery.diagnostics.typeStrategy": "Primitive",
     "powerquery.general.mode": "SDK",
-    "powerquery.timeout.globalTimeoutInMs": 50000,
-    "powerquery.timeout.symbolTimeoutInMs": 20000
+    "powerquery.timeout.globalTimeoutInMs": 500000,
+    "powerquery.timeout.symbolTimeoutInMs": 200000
 }
