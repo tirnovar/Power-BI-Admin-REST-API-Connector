@@ -353,6 +353,14 @@ ReportsNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                        {
+                            Extension.LoadString("ReportsUsers"),
+                            "ReportsUsers",
+                            pbiAdminAPI.ReportsUsers(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -1408,6 +1416,7 @@ pbiAdminAPI.DatasetsRefreshables =
         in
             output;
 //** Reports
+//**** Table of Reports
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -1456,6 +1465,86 @@ pbiAdminAPI.Reports =
                                 _[modifiedBy]?
                             }
                     )
+                )
+        in
+            output;
+//**** Users of Reports
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ReportsUsers =
+    () =>
+        let
+            reports = pbiAdminAPI.Reports()[[id]],
+            addon =
+                Table.AddColumn(
+                    reports,
+                    "Users",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/reports/" & [id] & "/users",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Users",
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "dashboardUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    },
+                    {
+                        "displayName",
+                        "emailAddress",
+                        "dashboardUserAccessRight",
+                        "identifier",
+                        "graphId",
+                        "principalType"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "displayName",
+                            type text
+                        },
+                        {
+                            "emailAddress",
+                            type text
+                        },
+                        {
+                            "dashboardUserAccessRight",
+                            type text
+                        },
+                        {
+                            "identifier",
+                            type text
+                        },
+                        {
+                            "graphId",
+                            type text
+                        },
+                        {
+                            "principalType",
+                            type text
+                        }
+                    }
                 )
         in
             output;

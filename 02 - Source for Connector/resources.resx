@@ -189,6 +189,9 @@
   <data name="Reports" xml:space="preserve">
     <value>Reports</value>
   </data>
+  <data name="ReportsUsers" xml:space="preserve">
+    <value>Reports - Users</value>
+  </data>
   <data name="Apps" xml:space="preserve">
     <value>Apps</value>
   </data>

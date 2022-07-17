@@ -53,7 +53,8 @@ ID | Name | Description
     │   ├── (fx) Parameters of Dataset
     │   └── (fx) Refresh history of Dataset
     ├── Reports
-    │   └── Reports
+    │   ├── Reports
+    │   └── Users of Reports
     ├── Dashboard
     │   ├── Dashboards
     │   ├── Users of Dashboards
