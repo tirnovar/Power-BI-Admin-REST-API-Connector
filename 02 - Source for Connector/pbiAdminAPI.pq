@@ -224,7 +224,8 @@ CapacitiesNavigation =
                             "Table",
                             "Table",
                             true
-                        },
+                        }
+                        /*,
                         {
                             Extension.LoadString("WorkloadsOfCapacities"),
                             "WorkloadsOfCapacities",
@@ -232,7 +233,8 @@ CapacitiesNavigation =
                             "Table",
                             "Table",
                             true
-                        },
+                        }
+                        */,
                         {
                             Extension.LoadString("CapacitiesUsers"),
                             "CapacitiesUsers",
@@ -603,7 +605,8 @@ GatewaysNavigation =
                             "Table",
                             "Table",
                             true
-                        },
+                        }
+                        /*,
                         {
                             Extension.LoadString("GatewaysDatasources"),
                             "GatewaysDatasources",
@@ -611,7 +614,7 @@ GatewaysNavigation =
                             "Table",
                             "Table",
                             true
-                        }
+                        }*/
                     }
                 ),
             Navigation =
@@ -1608,8 +1611,8 @@ pbiAdminAPI.ReportsSubscriptions =
                         "id",
                         "title",
                         "artifactId",
-                        "artifactDislayName",
-                        "subArtifactDislayName",
+                        "artifactDisplayName",
+                        "subArtifactDisplayName",
                         "isEnabled",
                         "frequency",
                         "startDate",
@@ -1624,7 +1627,7 @@ pbiAdminAPI.ReportsSubscriptions =
                         "title",
                         "artifactId",
                         "artifactDisplayName",
-                        "subArtifactDislayName",
+                        "subArtifactDisplayName",
                         "isEnabled",
                         "frequency",
                         "startDate",
@@ -1652,11 +1655,11 @@ pbiAdminAPI.ReportsSubscriptions =
                             type text
                         },
                         {
-                            "artifactDislayName",
+                            "artifactDisplayName",
                             type text
                         },
                         {
-                            "subArtifactDislayName",
+                            "subArtifactDisplayName",
                             type text
                         },
                         {
@@ -1669,11 +1672,11 @@ pbiAdminAPI.ReportsSubscriptions =
                         },
                         {
                             "startDate",
-                            type datetime
+                            type text
                         },
                         {
                             "endDate",
-                            type datetime
+                            type text
                         },
                         {
                             "linkToContent",
@@ -1686,15 +1689,11 @@ pbiAdminAPI.ReportsSubscriptions =
                         {
                             "attachmentFormat",
                             type text
-                        },
-                        {
-                            "users",
-                            type list
                         }
                     }
                 )
         in
-            output;
+            Table.SelectRows(output, each [subscriptionId] <> null);
 //** Apps
 //**** Talbe of Apps
 [
@@ -2055,7 +2054,7 @@ pbiAdminAPI.DashboardsSubscriptions =
                         "id",
                         "title",
                         "artifactId",
-                        "artifactDislayName",
+                        "artifactDisplayName",
                         "artifactType",
                         "isEnabled",
                         "frequency",
@@ -2097,7 +2096,7 @@ pbiAdminAPI.DashboardsSubscriptions =
                             type text
                         },
                         {
-                            "artifactDislayName",
+                            "artifactDisplayName",
                             type text
                         },
                         {
@@ -2114,11 +2113,11 @@ pbiAdminAPI.DashboardsSubscriptions =
                         },
                         {
                             "startDate",
-                            type datetime
+                            type text
                         },
                         {
                             "endDate",
-                            type datetime
+                            type text
                         },
                         {
                             "linkToContent",
@@ -2127,15 +2126,11 @@ pbiAdminAPI.DashboardsSubscriptions =
                         {
                             "previewImage",
                             type logical
-                        },
-                        {
-                            "users",
-                            type list
                         }
                     }
                 )
         in
-            output;
+            Table.SelectRows(output, each [subscriptionId] <> null);
 //**** Tiles
 [
     DataSource.Kind = "pbiAdminAPI"
@@ -2408,6 +2403,7 @@ pbiAdminAPI.Gateways =
         in
             output;
 //**** Datasources of Gateways
+/*
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -2494,6 +2490,7 @@ pbiAdminAPI.GatewaysDatasources =
                 )
         in
             output;
+            */
 //** About Tenant
 //**** Capacities
 [
@@ -2544,6 +2541,7 @@ pbiAdminAPI.Capacities =
         in
             output;
 //**** Workloads of Capacities
+/*
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -2605,6 +2603,7 @@ pbiAdminAPI.WorkloadsOfCapacities =
                 )
         in
             output;
+*/
 //**** Users of Capacities
 [
     DataSource.Kind = "pbiAdminAPI"
@@ -3215,7 +3214,7 @@ SubscriptionsType =
         Documentation.Examples = {
             [
                 Code = "=pbiAdminAPI.Subscriptions(""example@domain.com"")",
-                Result = "Table with Subscriptions -> Columns: id, title, artifactId, artifactDislayName, subArtifactDisplayName, artifactType, isEnabled, frequency, startDate, endDate, linkToContent, previewImage, attachmentFormat,users "
+                Result = "Table with Subscriptions -> Columns: id, title, artifactId, artifactDisplayName, subArtifactDisplayName, artifactType, isEnabled, frequency, startDate, endDate, linkToContent, previewImage, attachmentFormat,users "
             ]
         }
     ];
@@ -3278,7 +3277,7 @@ Subscriptions =
                                     id = text,
                                     title = text,
                                     artifactId = text,
-                                    artifactDislayName = text,
+                                    artifactDisplayName = text,
                                     subArtifactDisplayName = text,
                                     artifactType = text,
                                     isEnabled = logical,
@@ -3297,7 +3296,7 @@ Subscriptions =
                                             _[id]?,
                                             _[tite]?,
                                             _[artifactId]?,
-                                            _[artifactDislayName]?,
+                                            _[artifactDisplayName]?,
                                             _[subArtifactDisplayName]?,
                                             _[artifactType]?,
                                             _[isEnabled]?,
