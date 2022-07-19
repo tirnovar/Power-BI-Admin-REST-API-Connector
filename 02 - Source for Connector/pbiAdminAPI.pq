@@ -224,17 +224,7 @@ CapacitiesNavigation =
                             "Table",
                             "Table",
                             true
-                        }
-                        /*,
-                        {
-                            Extension.LoadString("WorkloadsOfCapacities"),
-                            "WorkloadsOfCapacities",
-                            pbiAdminAPI.WorkloadsOfCapacities(),
-                            "Table",
-                            "Table",
-                            true
-                        }
-                        */,
+                        },
                         {
                             Extension.LoadString("CapacitiesUsers"),
                             "CapacitiesUsers",
@@ -2540,70 +2530,6 @@ pbiAdminAPI.Capacities =
                 )
         in
             output;
-//**** Workloads of Capacities
-/*
-[
-    DataSource.Kind = "pbiAdminAPI"
-]
-pbiAdminAPI.WorkloadsOfCapacities =
-    () =>
-        let
-            capacities = pbiAdminAPI.Capacities()[[id]],
-            addon =
-                Table.AddColumn(
-                    capacities,
-                    "Workloads",
-                    each
-                        Json.Document(
-                            Web.Contents(
-                                api_uri,
-                                [
-                                    RelativePath = "capacities/" & [id] & "/Workloads",
-                                    Headers = [
-                                        #"Content-Type" = "application/json"
-                                    ]
-                                ]
-                            )
-                        )
-                            [value]?,
-                    type list
-                ),
-            expander =
-                Table.ExpandTableColumn(
-                    addon,
-                    "Workloads",
-                    {
-                        "state",
-                        "name",
-                        "maxMemoryPercentageSetByUser"
-                    },
-                    {
-                        "state",
-                        "name",
-                        "maxMemoryPercentageSetByUser"
-                    }
-                ),
-            output =
-                Table.TransformColumnTypes(
-                    expander,
-                    {
-                        {
-                            "state",
-                            type text
-                        },
-                        {
-                            "name",
-                            type text
-                        },
-                        {
-                            "maxMemoryPercentageSetByUser",
-                            type text
-                        }
-                    }
-                )
-        in
-            output;
-*/
 //**** Users of Capacities
 [
     DataSource.Kind = "pbiAdminAPI"

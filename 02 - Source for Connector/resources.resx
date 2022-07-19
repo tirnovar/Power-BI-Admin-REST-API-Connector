@@ -258,9 +258,6 @@
   <data name="Capacities" xml:space="preserve">
     <value>Capacities</value>
   </data>
-  <data name="WorkloadsOfCapacities" xml:space="preserve">
-    <value>Capacities - Workloads</value>
-  </data>
   <data name="CapacitiesUsers" xml:space="preserve">
     <value>Capacities - Users</value>
   </data>
