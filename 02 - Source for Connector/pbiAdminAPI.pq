@@ -32,8 +32,8 @@ windowHeight = 1024;
 shared
 pbiAdminAPI.Navigation =
     () as table =>
-        // Navigation
-        //** Main Navigation
+// Navigation
+//** Main Navigation
         let
             objects =
                 #table(
@@ -595,16 +595,23 @@ GatewaysNavigation =
                             "Table",
                             "Table",
                             true
-                        }
-                        /*,
+                        },
                         {
-                            Extension.LoadString("GatewaysDatasources"),
-                            "GatewaysDatasources",
-                            pbiAdminAPI.GatewaysDatasources(),
+                            Extension.LoadString("MyGateways"),
+                            "MyGateways",
+                            pbiAdminAPI.MyGateways(),
                             "Table",
                             "Table",
                             true
-                        }*/
+                        },
+                        {
+                            Extension.LoadString("GatewaysDatasources"),
+                            "GatewaysDatasources",
+                            pbiAdminAPI.MyGatewaysDatasources(),
+                            "Table",
+                            "Table",
+                            true
+                        }
                     }
                 ),
             Navigation =
@@ -2392,15 +2399,60 @@ pbiAdminAPI.Gateways =
                 )
         in
             output;
-//**** Datasources of Gateways
-/*
+//** Gateways under my Administration
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
-pbiAdminAPI.GatewaysDatasources =
+pbiAdminAPI.MyGateways =
     () =>
         let
-            gateways = pbiAdminAPI.Gateways()[[id]],
+            apiCall =
+                Json.Document(
+                    Web.Contents(
+                        "https://api.powerbi.com/v1.0/myorg",
+                        [
+                            RelativePath = "gateways",
+                            Headers = [
+                                #"Content-Type" = "application/json"
+                            ]
+                        ]
+                    )
+                ),
+            output =
+                #table(
+                    type table [
+                        id = text,
+                        gatewayId = text,
+                        name = text,
+                        #"type" = text,
+                        publicKeyExponent = text,
+                        publicKeyModulus = text,
+                        gatewayAnnotation = record
+                    ],
+                    List.Transform(
+                        apiCall[value],
+                        each
+                            {
+                                _[id]?,
+                                Text.From(_[gatewayId]?),
+                                _[name]?,
+                                _[#"type"]?,
+                                _[publicKeyExponent]?,
+                                _[publicKeyModulus]?,
+                                Json.Document(_[gatewayAnnotation]?)
+                            }
+                    )
+                )
+        in
+            output;
+//**** Datasources of MyGateways
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.MyGatewaysDatasources =
+    () =>
+        let
+            gateways = pbiAdminAPI.MyGateways()[[id]],
             addon =
                 Table.AddColumn(
                     gateways,
@@ -2480,7 +2532,6 @@ pbiAdminAPI.GatewaysDatasources =
                 )
         in
             output;
-            */
 //** About Tenant
 //**** Capacities
 [
@@ -4076,7 +4127,8 @@ ExecuteQuery =
         in
             functionVarTester;
 
-/* UI Definition */ pbiAdminAPI.UI = [
+// UI Definition 
+pbiAdminAPI.UI = [
     Beta = true,
     Category = "Power Platform",
     ButtonText = {
@@ -4101,7 +4153,8 @@ pbiAdminAPI.Icons = [
     }
 ];
 
-/* Navigation Tables Funcions */ Table.ToNavigationTable =
+// Navigation Tables Funcions 
+Table.ToNavigationTable =
     (table as table, keyColumns as list, nameColumn as text, dataColumn as text, itemKindColumn as text, itemNameColumn as text, isLeafColumn as text) as table =>
         let
             tableType = Value.Type(table),
