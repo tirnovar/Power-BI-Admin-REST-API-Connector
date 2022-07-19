@@ -32,7 +32,9 @@ ID | Name | Description
     │   ├── Reports published to Web
     │   └── Unused Artifacts in Groups (All)
     ├── Gateways
-    │   └── Gateways
+    │   ├── Gateways
+    │   ├── Gateways under my Administration
+    │   └── Datasources of gatewas under my Administration
     ├── Capacities
     │   ├── Capacities
     │   └── Users of Capacities
