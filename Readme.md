@@ -45,6 +45,7 @@ ID | Name | Description
     ├── Dataflows
     │   ├── Dataflows
     │   ├── Users of Dataflows
+    │   ├── Datasources of Dataflows
     │   └── Storage Accounts assigned with Dataflows
     ├── Datasets
     │   ├── Datasets

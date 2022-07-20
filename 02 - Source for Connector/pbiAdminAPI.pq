@@ -735,6 +735,14 @@ DataflowsNavigation =
                             true
                         },
                         {
+                            Extension.LoadString("DataflowsDatasources"),
+                            "DataflowsDatasources",
+                            pbiAdminAPI.DataflowsDatasources(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
                             Extension.LoadString("DataflowsUsers"),
                             "DataflowsUsers",
                             pbiAdminAPI.DataflowsUsers(),
@@ -1487,7 +1495,7 @@ pbiAdminAPI.Reports =
                                 _[createdDateTime]?,
                                 _[createdDateTime]?,
                                 _[createdBy]?,
-                                _[modifiedBy]?
+                                _[modifiedBy]? 
                             }
                     )
                 )
@@ -2180,6 +2188,7 @@ pbiAdminAPI.Tiles =
         in
             output;
 //** Dataflows
+//**** Table of Dataflows
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -2229,7 +2238,71 @@ pbiAdminAPI.Dataflows =
                 )
         in
             output;
-//** Dataflows Storage Accounts
+//**** Dataflows Datasources
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.DataflowsDatasources =
+    () =>
+        let
+            dataflows = pbiAdminAPI.Dataflows()[[objectId]],
+            addon =
+                Table.AddColumn(
+                    dataflows,
+                    "Datasources",
+                    each
+                        Json.Document(
+                            Web.Contents(
+                                api_uri,
+                                [
+                                    RelativePath = "admin/dataflows/" & [objectId] & "/datasources",
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ]
+                            )
+                        )
+                            [value]?,
+                    type list
+                ),
+            expander =
+                Table.ExpandTableColumn(
+                    addon,
+                    "Datasources",
+                    {
+                        "datasourceType",
+                        "datasourceId",
+                        "gatewayId",
+                        "connectionDetails"
+                    },
+                    {
+                        "datasourceType",
+                        "datasourceId",
+                        "gatewayId",
+                        "connectionDetails"
+                    }
+                ),
+            output =
+                Table.TransformColumnTypes(
+                    expander,
+                    {
+                        {
+                            "datasourceType",
+                            type text
+                        },
+                        {
+                            "datasourceId",
+                            type text
+                        },
+                        {
+                            "gatewayId",
+                            type text
+                        }
+                    }
+                )
+        in
+            output;
+//**** Dataflows Storage Accounts
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -2267,7 +2340,7 @@ pbiAdminAPI.StorageAccounts =
                 )
         in
             output;
-//** Users of Dataflows
+//**** Users of Dataflows
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
