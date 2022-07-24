@@ -97,9 +97,7 @@ ID | Name | Description
 <summary>Show backlog</summary>
 
 - Activity Events
-- Datasources for Dataflows
 - Data Labels
-- Function for Tiles in Dashboard (by Dashboard ID)
 - Function for Unused Artifacts (by Workspace ID)
 - Function for Datasets to Dataflow Links (Dataset ID)
 
