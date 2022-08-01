@@ -32,8 +32,8 @@ windowHeight = 1024;
 shared
 pbiAdminAPI.Navigation =
     () as table =>
-// Navigation
-//** Main Navigation
+        // Navigation
+        //** Main Navigation
         let
             objects =
                 #table(
@@ -802,6 +802,14 @@ FunctionsNavigation =
                             "Function",
                             "ExecuteQuery",
                             true
+                        },
+                        {
+                            Extension.LoadString("OwnAPICall"),
+                            "OwnAPICall",
+                            pbiAdminAPI.OwnAPICall,
+                            "Function",
+                            "OwnAPICall",
+                            true
                         }
                     }
                 ),
@@ -1495,7 +1503,7 @@ pbiAdminAPI.Reports =
                                 _[createdDateTime]?,
                                 _[createdDateTime]?,
                                 _[createdBy]?,
-                                _[modifiedBy]? 
+                                _[modifiedBy]?
                             }
                     )
                 )
@@ -1698,7 +1706,10 @@ pbiAdminAPI.ReportsSubscriptions =
                     }
                 )
         in
-            Table.SelectRows(output, each [subscriptionId] <> null);
+            Table.SelectRows(
+                output,
+                each [subscriptionId] <> null
+            );
 //** Apps
 //**** Talbe of Apps
 [
@@ -2135,7 +2146,10 @@ pbiAdminAPI.DashboardsSubscriptions =
                     }
                 )
         in
-            Table.SelectRows(output, each [subscriptionId] <> null);
+            Table.SelectRows(
+                output,
+                each [subscriptionId] <> null
+            );
 //**** Tiles
 [
     DataSource.Kind = "pbiAdminAPI"
@@ -2255,7 +2269,10 @@ pbiAdminAPI.DataflowsDatasources =
                             Web.Contents(
                                 api_uri,
                                 [
-                                    RelativePath = "admin/dataflows/" & [objectId] & "/datasources",
+                                    RelativePath =
+                                        "admin/dataflows/"
+                                        & [objectId]
+                                        & "/datasources",
                                     Headers = [
                                         #"Content-Type" = "application/json"
                                     ]
@@ -4188,6 +4205,119 @@ ExecuteQuery =
                                 tableCreator
                     in
                         output
+                else
+                    #table(
+                        type table [Response = text],
+                        {
+                            {
+                                "Please fill parameters of function."
+                            }
+                        }
+                    )
+        in
+            functionVarTester;
+
+// Own API Call
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+shared pbiAdminAPI.OwnAPICall =
+    Value.ReplaceType(
+        OwnAPICall,
+        OwnAPICallType
+    );
+
+OwnAPICallType =
+    type function (optional subUrl as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "Relative Path",
+                Documentation.FieldDescription = "Relative Path of URL that will be added to https://api.powerbi.com/v1.0/myorg.",
+                Documentation.SampleValues = {
+                    "admin/dataflows"
+                }
+            ]
+        ), optional callQuery as
+        (
+            type text
+            meta
+            [
+                Documentation.FieldCaption = "HTTP Query",
+                Documentation.FieldDescription = "HTTP Query that will be added to URL.",
+                Documentation.SampleValues = {
+                    "$top=10&$skip=0"
+                }
+            ]
+        ), optional callContent as
+        (
+            type record
+            meta
+            [
+                Documentation.FieldCaption = "Content",
+                Documentation.FieldDescription = "Record with content that you want to be send against the API.",
+                Documentation.SampleValues = {
+                    "[datasets=""xxx-xxxx-yyxa...""]"
+                }
+            ]
+        )) as table
+    meta
+    [
+        Documentation.Name = "pbiAdminAPI.OwnAPICall",
+        Documentation.LongDescription = "",
+        Documentation.Examples = {
+            [
+                Code = "=pbiAdminAPI.OwnAPICall(""admin/datawlows"",""$top=10&$skip=0"",null)",
+                Result = ""
+            ]
+        }
+    ];
+
+OwnAPICall =
+    (optional subUrl as text, optional callQuery as text, optional callContent as record) =>
+        let
+            functionVarTester =
+                if (subUrl <> null and subUrl <> "") then
+                    let
+                        apiRecord =
+                            let
+                                initialRecord = [
+                                    RelativePath = subUrl,
+                                    Headers = [
+                                        #"Content-Type" = "application/json"
+                                    ]
+                                ],
+                                apiQuery =
+                                    if callQuery = null then
+                                        []
+                                    else
+                                        [
+                                            Query = callQuery
+                                        ],
+                                apiContent =
+                                    if callContent = null then
+                                        []
+                                    else
+                                        [
+                                            Content = 
+                                                Text.ToBinary(
+                                                    Uri.BuildQueryString(callContent)
+                                                )
+                                        ],
+                                apiRecordCombined =
+                                    Record.Combine(
+                                        {
+                                            initialRecord,
+                                            apiQuery,
+                                            apiContent
+                                        }
+                                    )
+                            in
+                                apiRecordCombined,
+                        apiCall = Json.Document(Web.Contents(api_uri, apiRecord))
+                    in
+                        apiCall
                 else
                     #table(
                         type table [Response = text],
