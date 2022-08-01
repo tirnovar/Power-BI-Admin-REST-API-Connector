@@ -76,6 +76,7 @@ ID | Name | Description
     │   └── (fx) Scanner API - Result
     └── Functions library
         ├── (fx) Execute Query against dataset
+        ├── (fx) Own API Call
         ├── (fx) User - Artifact Access
         └── (fx) User - Subscriptions
         
