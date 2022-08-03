@@ -3,7 +3,7 @@
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/%C5%A1t%C4%9Bp%C3%A1n-re%C5%A1l-464084152/) [![Twitter](https://img.shields.io/badge/twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/tpnRel1)
 
 ## Basic Info
-This connector is working with Power BI REST API. This API has its limitations on every call and data structure. Also, this API is under continuous development, so sometimes something stops working, or a new call appears. Complete info about this API you can find [HERE](https://docs.microsoft.com/en-gb/rest/api/power-bi/?redirectedfrom=MSDN).
+This connector is working with Power BI REST API. This API has limitations on every call, permissions, and data structure. Also, this API is under continuous development, so sometimes something stops working, or a new call appears. Complete info about this API you can find [HERE](https://docs.microsoft.com/en-gb/rest/api/power-bi/?redirectedfrom=MSDN).
 
 ## Actual categories in Connector:
 **FOR ALL THESE TOPICS IS REQUIRED TO HAVE POWER ADMIN RIGHTS**
