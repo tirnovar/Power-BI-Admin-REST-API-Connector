@@ -6,7 +6,7 @@
 **FOR ALL THESE TOPICS IS REQUIRED TO HAVE POWER ADMIN RIGHTS**
 ID | Name | Description
 -- | ---- | ----------- 
-0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Capacities</code>.
+0 | Generic Informations About Tenant | Returns tables that are containing generinc informations about tenant like <code> Unused Artifacts</code>.
 1 | Gateways | Contains information about gateways in tenants, even about personal gateways.
 2 | Capacities | Contains information about capacities in tenants.
 3 | Groups & Workspaces | Returns all groups and workspace in a tenant.
