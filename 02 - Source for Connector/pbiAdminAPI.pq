@@ -143,6 +143,14 @@ pbiAdminAPI.Navigation =
                             false
                         },
                         {
+                            Extension.LoadString("ActivityAdmin"),
+                            "ActivityAdmin",
+                            ActivityNavigation(),
+                            "Folder",
+                            "ActivityAdmin",
+                            false
+                        },
+                        {
                             Extension.LoadString("FunctionsAdmin"),
                             "FunctionsAdmin",
                             FunctionsNavigation(),
@@ -862,6 +870,51 @@ ScannerNavigation =
                             pbiAdminAPI.ScannerAPIStatusAndResult,
                             "Function",
                             "ScannerAPIStatusAndResult",
+                            true
+                        }
+                    }
+                ),
+            Navigation =
+                Table.ForceToNavigationTable(
+                    objects,
+                    {"Key"},
+                    "Name",
+                    "Data",
+                    "ItemKind",
+                    "ItemName",
+                    "IsLeaf"
+                )
+        in
+            Navigation;
+
+ActivityNavigation =
+    () as table =>
+        let
+            objects =
+                #table(
+                    {
+                        "Name",
+                        "Key",
+                        "Data",
+                        "ItemKind",
+                        "ItemName",
+                        "IsLeaf"
+                    },
+                    {
+                        {
+                            Extension.LoadString("ActivityEventsBeforeTwoDays"),
+                            "ActivityEventsBeforeTwoDays",
+                            pbiAdminAPI.ActivityEventsBeforeTwoDays(),
+                            "Table",
+                            "Table",
+                            true
+                        },
+                        {
+                            Extension.LoadString("ActivityEventsLast30Days"),
+                            "ActivityEventsLast30Days",
+                            pbiAdminAPI.ActivityEventsLast30Days(),
+                            "Table",
+                            "Table",
                             true
                         }
                     }
@@ -3130,6 +3183,178 @@ pbiAdminAPI.PublishedToWeb =
                 )
         in
             output;
+// Activity Events
+//**** Activity Events Before Two Days
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ActivityEventsBeforeTwoDays =
+    () =>
+        let
+            today = Date.From(DateTime.LocalNow()),
+            dateMovement = Date.AddDays(today, -2),
+            startDateTimeVariable =
+                "'"
+                & Date.ToText(
+                    dateMovement,
+                    "yyyy-MM-ddT00:00:00.000Z"
+                )
+                & "'",
+            endDateTimeVariable =
+                "'"
+                & Date.ToText(
+                    dateMovement,
+                    "yyyy-MM-ddT23:59:59.999Z"
+                )
+                & "'",
+            apiCall =
+                Json.Document(
+                    Web.Contents(
+                        api_uri,
+                        [
+                            RelativePath = "admin/activityevents",
+                            Headers = [
+                                #"Content-Type" = "application/json"
+                            ],
+                            Query = [
+                                startDateTime = startDateTimeVariable,
+                                endDateTime = endDateTimeVariable
+                            ]
+                        ]
+                    )
+                ),
+            generator =
+                List.Buffer(
+                    List.Generate(
+                        () =>
+                            [
+                                result = apiCall,
+                                uri = result[continuationUri]?,
+                                lastResultSet = result[lastResultSet]?
+                            ],
+                        each [uri] <> null,
+                        each
+                            [
+                                result =
+                                    Json.Document(
+                                        Web.Contents(
+                                            uri,
+                                            [Headers = [
+                                                #"Content-Type" = "application/json"
+                                            ]]
+                                        )
+                                    ),
+                                uri = _[result][continuationUri]?,
+                                lastResultSet = _[result][lastResultSet]?
+                            ],
+                        each [result][activityEventEntities]?
+                    )
+                ),
+            convertor = List.RemoveNulls(List.Combine(generator))
+        in
+            #table(
+                type table [content = record],
+                List.Transform(convertor, each
+                    {
+                        _
+                    })
+            );
+//**** Activity Events in Last 30 Days
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ActivityEventsLast30Days =
+    () =>
+        let
+            today = Date.From(DateTime.LocalNow()),
+            startDate = Date.AddDays(today, -30),
+            listofDates =
+                    List.Dates(
+                        startDate,
+                        Number.From(Date.AddDays(today, -1) - startDate),
+                        #duration(1, 0, 0, 0)
+                    ),
+                transformator =
+                    List.Transform(
+                        listofDates,
+                        each
+                            let
+                                startDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT00:00:00.000Z"
+                                    )
+                                    & "'",
+                                endDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT23:59:59.999Z"
+                                    )
+                                    & "'",
+                                apiCall =
+                                    Json.Document(
+                                        Web.Contents(
+                                            api_uri,
+                                            [
+                                                RelativePath = "admin/activityevents",
+                                                Headers = [
+                                                    #"Content-Type" = "application/json"
+                                                ],
+                                                Query = [
+                                                    startDateTime = startDateTimeVariable,
+                                                    endDateTime = endDateTimeVariable
+                                                ]
+                                            ]
+                                        )
+                                    ),
+                                generator =
+                                    List.Buffer(
+                                        List.Generate(
+                                            () =>
+                                                [
+                                                    result = apiCall,
+                                                    uri = result[continuationUri]?,
+                                                    lastResultSet = result[lastResultSet]?
+                                                ],
+                                            each [uri] <> null,
+                                            each
+                                                [
+                                                    result =
+                                                        Json.Document(
+                                                            Web.Contents(
+                                                                uri,
+                                                                [
+                                                                    Headers = [
+                                                                        #"Content-Type" = "application/json"
+                                                                    ]
+                                                                ]
+                                                            )
+                                                        ),
+                                                    uri = _[result][continuationUri]?,
+                                                    lastResultSet = _[result][lastResultSet]?
+                                                ],
+                                            each [result][activityEventEntities]?
+                                        )
+                                    ),
+                                convertor = List.RemoveNulls(List.Combine(generator))
+                            in
+                                convertor
+                    ),
+                listOutputConvertor = List.RemoveNulls(List.Combine(transformator))
+            in
+                #table(
+                    type table [content = record],
+                    List.Transform(
+                        listOutputConvertor,
+                        each
+                            {
+                                _
+                            }
+                    )
+                );
+
 //** Functions Library
 //**** Artifact Access
 [
@@ -3647,7 +3872,7 @@ Goals =
         in
             functionVarTester;
 
-//**** Goals
+//**** Goal Values and Notes
 [
     DataSource.Kind = "pbiAdminAPI"
 ]
@@ -3790,6 +4015,7 @@ GoalValuesAndNotes =
         in
             functionVarTester;
 
+//** Scanner API
 //**** Scanner API - GET INFO()
 [
     DataSource.Kind = "pbiAdminAPI"
@@ -4300,10 +4526,7 @@ OwnAPICall =
                                         []
                                     else
                                         [
-                                            Content = 
-                                                Text.ToBinary(
-                                                    Uri.BuildQueryString(callContent)
-                                                )
+                                            Content = Text.ToBinary(Uri.BuildQueryString(callContent))
                                         ],
                                 apiRecordCombined =
                                     Record.Combine(

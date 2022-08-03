@@ -74,6 +74,9 @@ ID | Name | Description
     │   ├── Scanner API - Modified Workspaces
     │   ├── (fx) Scanner API - Get Info
     │   └── (fx) Scanner API - Result
+    ├── Activity Events
+    │   ├── Activity Events in last 30 days
+    │   ├── Activity Events before two days
     └── Functions library
         ├── (fx) Execute Query against dataset
         ├── (fx) Own API Call
