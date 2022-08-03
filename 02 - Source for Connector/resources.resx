@@ -162,6 +162,9 @@
   <data name="ScannerAdmin" xml:space="preserve">
     <value>11 - Scanner API Functions</value>
   </data>
+  <data name="ActivityAdmin" xml:space="preserve">
+    <value>12 - Activity Events</value>
+  </data>
   <data name="FunctionsAdmin" xml:space="preserve">
     <value>99 - Functions library</value>
   </data>
@@ -290,5 +293,11 @@
   </data>
   <data name="OwnAPICall" xml:space="preserve">
     <value>Send Own API Call against API</value>
+  </data>
+  <data name="ActivityEventsBeforeTwoDays" xml:space="preserve">
+    <value>Actvity Events before two days</value>
+  </data>
+  <data name="ActivityEventsLast30Days" xml:space="preserve">
+    <value>Activity Events in last 30 days</value>
   </data>
 </root>
