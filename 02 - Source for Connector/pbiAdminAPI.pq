@@ -15,6 +15,8 @@ logout_uri = "https://login.microsoftonline.com/logout.srf";
 
 resource_uri = "https://analysis.windows.net/powerbi/api";
 
+learn_more_uri = "https://github.com/tirnovar/Power-BI-Admin-REST-API-Connector";
+
 // Static variables
 api_uri = "https://api.powerbi.com/v1.0/myorg";
 
@@ -4561,6 +4563,7 @@ pbiAdminAPI.UI = [
         Extension.LoadString("ButtonTitle"),
         Extension.LoadString("ButtonHelp")
     },
+    LearnMoreUrl = learn_more_uri,
     SourceImage = pbiAdminAPI.Icons,
     SourceTypeImage = pbiAdminAPI.Icons
 ];
