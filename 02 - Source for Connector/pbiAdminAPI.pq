@@ -1555,8 +1555,8 @@ pbiAdminAPI.Reports =
                                 _[webUrl]?,
                                 _[embedUrl]?,
                                 _[datasetId]?,
-                                _[createdDateTime]?,
-                                _[createdDateTime]?,
+                                DateTime.From(_[createdDateTime]?),
+                                DateTime.From(_[modifiedDateTime]?),
                                 _[createdBy]?,
                                 _[modifiedBy]?
                             }
@@ -2301,7 +2301,7 @@ pbiAdminAPI.Dataflows =
                                 _[configuredBy]?,
                                 _[users]?,
                                 _[modifiedBy]?,
-                                _[modifiedDateTime]?
+                                DateTime.From(_[modifiedDateTime]?)
                             }
                     )
                 )
@@ -2889,8 +2889,8 @@ pbiAdminAPI.Imports =
                             {
                                 _[id]?,
                                 _[importState]?,
-                                _[createdDateTime]?,
-                                _[updatedDateTime]?,
+                                DateTime.From(_[createdDateTime]?),
+                                DateTime.From(_[updatedDateTime]?),
                                 _[name]?,
                                 _[connectionType]?,
                                 _[source]?,
@@ -3595,8 +3595,8 @@ Subscriptions =
                                             _[artifactType]?,
                                             _[isEnabled]?,
                                             _[frequency]?,
-                                            _[startDate]?,
-                                            _[endDate]?,
+                                            DateTime.From(_[startDate]?),
+                                            DateTime.From(_[endDate]?),
                                             _[linkToContent]?,
                                             _[previewImage]?,
                                             _[attachmentFormat]?,
@@ -3702,8 +3702,8 @@ Scorecards =
                                             _[name]?,
                                             _[contact]?,
                                             _[lastModifiedBy]?,
-                                            _[createdTime]?,
-                                            _[lastModifiedTime]?,
+                                            DateTime.From(_[createdTime]?),
+                                            DateTime.From(_[lastModifiedTime]?),
                                             _[provisioningStatus]?,
                                             _[groupId]?,
                                             _[datasetId]?,
@@ -3835,12 +3835,12 @@ Goals =
                                                 _[name]?,
                                                 _[scorecardId]?,
                                                 _[lastModifiedBy]?,
-                                                _[createdTime]?,
+                                                DateTime.From(_[createdTime]?),
                                                 _[owner]?,
                                                 _[unit]?,
-                                                _[lastModifiedTime]?,
-                                                _[startDate]?,
-                                                _[completionDate]?,
+                                                DateTime.From(_[lastModifiedTime]?),
+                                                DateTime.From(_[startDate]?),
+                                                DateTime.From(_[completionDate]?),
                                                 _[valueConnection]?,
                                                 _[notesCount]?,
                                                 _[valuesFormatString]?,
