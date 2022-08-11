@@ -95,7 +95,8 @@ ID | Name | Description
 
 ## Installing steps
 1) Download actual version of connector (.mez file) from [Connector Folder](https://github.com/tirnovar/Power-BI-Admin-REST-API-Connector/tree/main/01%20-%20Connector)
-2) Put this file into folder path: <code> C:\Users\{username}\Documents\Power BI Desktop\Custom Connectors\ </code>
+2) Put this file into folder path: <code> C:\Users\{username}\Documents\Power BI Desktop\Custom Connectors\ </code>  
+*If you dont have this folder already, you have to create it.*
 3) In Power BI Desktop allow using of Custom Connector: \
   *File -> Options and Settings -> Options -> Security -> (Not Recommended) Allow any extension to load without validation or warning*
 4) Restart whole Power BI Desktop
