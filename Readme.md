@@ -109,6 +109,8 @@ ID | Name | Description
 - Data Labels
 - Function for Unused Artifacts (by Workspace ID)
 - Function for Datasets to Dataflow Links (Dataset ID)
+- Deployment Pipeline Operations History
+- Refreshables
 
 </details>
 
