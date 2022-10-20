@@ -3,5 +3,7 @@
     "powerquery.diagnostics.typeStrategy": "Primitive",
     "powerquery.general.mode": "SDK",
     "powerquery.timeout.globalTimeoutInMs": 500000,
-    "powerquery.timeout.symbolTimeoutInMs": 200000
+    "powerquery.timeout.symbolTimeoutInMs": 200000,
+    "powerquery.sdk.defaultQueryFile": "${workspaceFolder}\\pbiAdminAPI.query.pq",
+    "powerquery.sdk.defaultExtension": "${workspaceFolder}\\bin\\AnyCPU\\Debug\\pbiAdminAPI.mez"
 }
