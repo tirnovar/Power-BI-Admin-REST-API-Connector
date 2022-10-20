@@ -992,7 +992,7 @@ pbiAdminAPI.Groups =
                         each
                             {
                                 _[id]?,
-                                _[isReadOnly]?,
+                                Logical.From(_[isReadOnly]?),
                                 _[isOnDedicatedCapacity]?,
                                 _[capacityId]?,
                                 _[capacityMigrationStatus]?,
@@ -1998,7 +1998,7 @@ pbiAdminAPI.Dashboards =
                             {
                                 _[id]?,
                                 _[displayName]?,
-                                _[isReadOnly]?,
+                                Logical.From(_[isReadOnly]?),
                                 _[webUrl]?,
                                 _[embedUrl]?,
                                 _[subscriptions]?
@@ -2236,8 +2236,8 @@ pbiAdminAPI.Tiles =
                     type table [
                         id = text,
                         embedUrl = text,
-                        rowSpan = text,
-                        colSpan = text,
+                        rowSpan = number,
+                        colSpan = number,
                         reportId = text,
                         datasetId = text
                     ],
@@ -2247,8 +2247,8 @@ pbiAdminAPI.Tiles =
                             {
                                 _[id]?,
                                 _[embedUrl]?,
-                                _[rowSpan]?,
-                                _[colSpan]?,
+                                Number.From(_[rowSpan]?),
+                                Number.From(_[colSpan]?),
                                 _[reportId]?,
                                 _[datasetId]?
                             }
