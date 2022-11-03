@@ -918,6 +918,14 @@ ActivityNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                        {
+                            Extension.LoadString("ExternalApplicationConnectedBy30Days"),
+                            "ExternalApplicationConnectedBy30Days",
+                            pbiAdminAPI.ExternalApplicationConnectedBy30Days(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -3307,6 +3315,103 @@ pbiAdminAPI.ActivityEventsLast30Days =
                                                 Query = [
                                                     startDateTime = startDateTimeVariable,
                                                     endDateTime = endDateTimeVariable
+                                                ]
+                                            ]
+                                        )
+                                    ),
+                                generator =
+                                    List.Buffer(
+                                        List.Generate(
+                                            () =>
+                                                [
+                                                    result = apiCall,
+                                                    uri = result[continuationUri]?,
+                                                    lastResultSet = result[lastResultSet]?
+                                                ],
+                                            each [uri] <> null,
+                                            each
+                                                [
+                                                    result =
+                                                        Json.Document(
+                                                            Web.Contents(
+                                                                uri,
+                                                                [
+                                                                    Headers = [
+                                                                        #"Content-Type" = "application/json"
+                                                                    ]
+                                                                ]
+                                                            )
+                                                        ),
+                                                    uri = _[result][continuationUri]?,
+                                                    lastResultSet = _[result][lastResultSet]?
+                                                ],
+                                            each [result][activityEventEntities]?
+                                        )
+                                    ),
+                                convertor = List.RemoveNulls(List.Combine(generator))
+                            in
+                                convertor
+                    ),
+                listOutputConvertor = List.RemoveNulls(List.Combine(transformator))
+            in
+                #table(
+                    type table [content = record],
+                    List.Transform(
+                        listOutputConvertor,
+                        each
+                            {
+                                _
+                            }
+                    )
+                );
+
+//**** External Application Connected By 30 Days
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ExternalApplicationConnectedBy30Days =
+    () =>
+        let
+            today = Date.From(DateTime.LocalNow()),
+            startDate = Date.AddDays(today, -30),
+            listofDates =
+                    List.Dates(
+                        startDate,
+                        Number.From(Date.AddDays(today, -1) - startDate),
+                        #duration(1, 0, 0, 0)
+                    ),
+                transformator =
+                    List.Transform(
+                        listofDates,
+                        each
+                            let
+                                startDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT00:00:00.000Z"
+                                    )
+                                    & "'",
+                                endDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT23:59:59.999Z"
+                                    )
+                                    & "'",
+                                apiCall =
+                                    Json.Document(
+                                        Web.Contents(
+                                            api_uri,
+                                            [
+                                                RelativePath = "admin/activityevents",
+                                                Headers = [
+                                                    #"Content-Type" = "application/json"
+                                                ],
+                                                Query = [
+                                                    startDateTime = startDateTimeVariable,
+                                                    endDateTime = endDateTimeVariable,
+                                                    #"$filter" = "Activity eq 'AnalyzedByExternalApplication'"
                                                 ]
                                             ]
                                         )
