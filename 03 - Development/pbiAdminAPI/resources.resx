@@ -300,4 +300,7 @@
   <data name="ActivityEventsLast30Days" xml:space="preserve">
     <value>Activity Events in last 30 days</value>
   </data>
+  <data name="ExternalApplicationConnectedBy30Days" xml:space="preserve">
+    <value>External Application Connected By 30 Days</value>
+  </data>
 </root>

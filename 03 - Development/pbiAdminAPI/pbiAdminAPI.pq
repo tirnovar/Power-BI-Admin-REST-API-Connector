@@ -918,6 +918,14 @@ ActivityNavigation =
                             "Table",
                             "Table",
                             true
+                        },
+                        {
+                            Extension.LoadString("ExternalApplicationConnectedBy30Days"),
+                            "ExternalApplicationConnectedBy30Days",
+                            pbiAdminAPI.ExternalApplicationConnectedBy30Days(),
+                            "Table",
+                            "Table",
+                            true
                         }
                     }
                 ),
@@ -3353,6 +3361,143 @@ pbiAdminAPI.ActivityEventsLast30Days =
                         each
                             {
                                 _
+                            }
+                    )
+                );
+
+//**** External Application Connected By 30 Days
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
+pbiAdminAPI.ExternalApplicationConnectedBy30Days =
+    () =>
+        let
+            today = Date.From(DateTime.LocalNow()),
+            startDate = Date.AddDays(today, -30),
+            listofDates =
+                    List.Dates(
+                        startDate,
+                        Number.From(Date.AddDays(today, -1) - startDate),
+                        #duration(1, 0, 0, 0)
+                    ),
+                transformator =
+                    List.Transform(
+                        listofDates,
+                        each
+                            let
+                                startDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT00:00:00.000Z"
+                                    )
+                                    & "'",
+                                endDateTimeVariable =
+                                    "'"
+                                    & Date.ToText(
+                                        _,
+                                        "yyyy-MM-ddT23:59:59.999Z"
+                                    )
+                                    & "'",
+                                apiCall =
+                                    Json.Document(
+                                        Web.Contents(
+                                            api_uri,
+                                            [
+                                                RelativePath = "admin/activityevents",
+                                                Headers = [
+                                                    #"Content-Type" = "application/json"
+                                                ],
+                                                Query = [
+                                                    startDateTime = startDateTimeVariable,
+                                                    endDateTime = endDateTimeVariable,
+                                                    #"$filter" = "Activity eq 'AnalyzedByExternalApplication'"
+                                                ]
+                                            ]
+                                        )
+                                    ),
+                                generator =
+                                    List.Buffer(
+                                        List.Generate(
+                                            () =>
+                                                [
+                                                    result = apiCall,
+                                                    uri = result[continuationUri]?,
+                                                    lastResultSet = result[lastResultSet]?
+                                                ],
+                                            each [uri] <> null,
+                                            each
+                                                [
+                                                    result =
+                                                        Json.Document(
+                                                            Web.Contents(
+                                                                uri,
+                                                                [
+                                                                    Headers = [
+                                                                        #"Content-Type" = "application/json"
+                                                                    ]
+                                                                ]
+                                                            )
+                                                        ),
+                                                    uri = _[result][continuationUri]?,
+                                                    lastResultSet = _[result][lastResultSet]?
+                                                ],
+                                            each [result][activityEventEntities]?
+                                        )
+                                    ),
+                                convertor = List.RemoveNulls(List.Combine(generator))
+                            in
+                                convertor
+                    ),
+                listOutputConvertor = List.RemoveNulls(List.Combine(transformator))
+            in
+                #table(
+                    type table [
+                        Id = text,
+                        RecordType = text,
+                        CreationTime = datetime,
+                        Operation = text,
+                        OrganizationId = text,
+                        UserType = text,
+                        UserKey = text,
+                        Workload = text,
+                        UserId = text,
+                        ClientIP = text,
+                        Activity = text,
+                        DatasetId = text,
+                        DatasetName = text,
+                        IsSuccess = logical,
+                        RequestId = text,
+                        ActivityId = text,
+                        EndPoint = text,
+                        UserAgent = text,
+                        ItemName = text,
+                        ObjectId = text
+                        ],
+                    List.Transform(
+                        listOutputConvertor,
+                        each
+                            {
+                                _[Id]?,
+                                Text.From(_[RecordType]?),
+                                DateTime.From(_[CreationTime]?),
+                                _[Operation]?,
+                                _[OrganizationId]?,
+                                Text.From(_[UserType]?),
+                                _[UserKey]?,
+                                _[Workload]?,
+                                _[UserId]?,
+                                _[ClientIP]?,
+                                _[Activity]?,
+                                _[DatasetId]?,
+                                _[DatasetName]?,
+                                _[IsSuccess]?,
+                                _[RequestId]?,
+                                _[ActivityId]?,
+                                _[EndPoint]?,
+                                _[UserAgent]?,
+                                _[ItemName]?,
+                                _[ObjectId]?
                             }
                     )
                 );
