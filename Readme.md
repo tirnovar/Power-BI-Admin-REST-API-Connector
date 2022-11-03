@@ -110,7 +110,6 @@ ID | Name | Description
 - Data Labels
 - Function for Unused Artifacts (by Workspace ID)
 - Function for Datasets to Dataflow Links (Dataset ID)
-- Excel Connected to Power BI Dataset in last 30 days
 - Deployment Pipeline Operations History
 - Dataflow refreshes
 
