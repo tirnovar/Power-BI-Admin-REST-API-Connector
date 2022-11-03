@@ -3452,12 +3452,52 @@ pbiAdminAPI.ExternalApplicationConnectedBy30Days =
                 listOutputConvertor = List.RemoveNulls(List.Combine(transformator))
             in
                 #table(
-                    type table [content = record],
+                    type table [
+                        Id = text,
+                        RecordType = text,
+                        CreationTime = datetime,
+                        Operation = text,
+                        OrganizationId = text,
+                        UserType = text,
+                        UserKey = text,
+                        Workload = text,
+                        UserId = text,
+                        ClientIP = text,
+                        Activity = text,
+                        DatasetId = text,
+                        DatasetName = text,
+                        IsSuccess = logical,
+                        RequestId = text,
+                        ActivityId = text,
+                        EndPoint = text,
+                        UserAgent = text,
+                        ItemName = text,
+                        ObjectId = text
+                        ],
                     List.Transform(
                         listOutputConvertor,
                         each
                             {
-                                _
+                                _[Id]?,
+                                Text.From(_[RecordType]?),
+                                DateTime.From(_[CreationTime]?),
+                                _[Operation]?,
+                                _[OrganizationId]?,
+                                Text.From(_[UserType]?),
+                                _[UserKey]?,
+                                _[Workload]?,
+                                _[UserId]?,
+                                _[ClientIP]?,
+                                _[Activity]?,
+                                _[DatasetId]?,
+                                _[DatasetName]?,
+                                _[IsSuccess]?,
+                                _[RequestId]?,
+                                _[ActivityId]?,
+                                _[EndPoint]?,
+                                _[UserAgent]?,
+                                _[ItemName]?,
+                                _[ObjectId]?
                             }
                     )
                 );
