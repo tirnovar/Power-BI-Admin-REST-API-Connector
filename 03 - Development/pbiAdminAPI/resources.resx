@@ -264,6 +264,9 @@
   <data name="StorageAccounts" xml:space="preserve">
     <value>Storage Accounts assigned with Dataflows</value>
   </data>
+  <data name="DataflowsInMyManagableWorkspaces" xml:space="preserve">
+    <value>Storage Accounts assigned with Dataflows</value>
+  </data>
   <data name="Capacities" xml:space="preserve">
     <value>Capacities</value>
   </data>
@@ -302,5 +305,8 @@
   </data>
   <data name="ExternalApplicationConnectedBy30Days" xml:space="preserve">
     <value>External Application Connected By 30 Days</value>
+  </data>
+  <data name="ExportedReportBy30Days" xml:space="preserve">
+    <value>Exported Reports By 30 Days</value>
   </data>
 </root>
