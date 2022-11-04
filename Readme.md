@@ -82,6 +82,7 @@ ID | Name | Description
     ├── Activity Events
     │   ├── Activity Events in last 30 days
     │   ├── Activity Events before two days
+    │   ├── Exported Reports By 30 Days
     │   └── External Application Connected By 30 Days
     └── Functions library
         ├── (fx) Execute Query against dataset
