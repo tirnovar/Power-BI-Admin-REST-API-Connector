@@ -2457,13 +2457,71 @@ DatasourcesOfDataset = (optional datasetId as text) =>
     in
         #table(
             type table [
-                output = record
+                Id = text,
+                RecordType = text,
+                CreationTime = datetime,
+                Operation = text,
+                OrganizationId = text,
+                UserType = text,
+                UserKey = text,
+                Workload = text,
+                UserId = text,
+                ClientIP = text,
+                UserAgent = text,
+                Activity = text,
+                ItemName = text,
+                WorkSpaceName = text,
+                DatasetName = text,
+                ReportName = text,
+                CapacityId = text,
+                CapacityName = text,
+                WorkspaceId = text,
+                ObjectId = text,
+                DatasetId = text,
+                ReportId = text,
+                ArtifactId = text,
+                ArtifactName = text,
+                IsSuccess = logical,
+                ReportType = text,
+                RequestId = text,
+                ActivityId = text,
+                DistributionMethod = text,
+                ArtifactKind = text
             ],
             List.Transform(
                 listOutputConvertor,
                 each
                     {
-                        _
+                        _[Id]?,
+                        Text.From(_[RecordType]?),
+                        DateTime.From(_[CreationTime]?),
+                        _[Operation]?,
+                        _[OrganizationId]?,
+                        Text.From(_[UserType]?),
+                        _[UserKey]?,
+                        _[Workload]?,
+                        _[UserId]?,
+                        _[ClientIP]?,
+                        _[UserAgent]?,
+                        _[Activity]?,
+                        _[ItemName]?,
+                        _[WorkSpaceName]?,
+                        _[DatasetName]?,
+                        _[ReportName]?,
+                        _[CapacityId]?,
+                        _[CapacityName]?,
+                        _[WorkspaceId]?,
+                        _[ObjectId]?,
+                        _[DatasetId]?,
+                        _[ReportId]?,
+                        _[ArtifactId]?,
+                        _[ArtifactName]?,
+                        _[IsSuccess]?,
+                        _[ReportType]?,
+                        _[RequestId]?,
+                        _[ActivityId]?,
+                        _[DistributionMethod]?,
+                        _[ArtifactKind]?
                     }
             )
         );
