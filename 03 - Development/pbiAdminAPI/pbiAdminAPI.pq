@@ -550,7 +550,15 @@ ActivityNavigation = () as table =>
                     "Table",
                     "Table",
                     true
-                }
+                },
+                {
+                    Extension.LoadString("ExportedReportBy30Days"),
+                    "ExportedReportBy30Days",
+                    pbiAdminAPI.ExportedReportBy30Days(),
+                    "Table",
+                    "Table",
+                    true
+                } 
             }
         ),
         Navigation = Table.ForceToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
@@ -2387,7 +2395,78 @@ DatasourcesOfDataset = (optional datasetId as text) =>
                     }
             )
         );
-
+//**** Exported Report By 30 Days
+[
+    DataSource.Kind = "pbiAdminAPI"
+] pbiAdminAPI.ExportedReportBy30Days = () =>
+    let
+        today = Date.From(DateTime.LocalNow()),
+        startDate = Date.AddDays(today, -30),
+        listofDates = List.Dates(startDate, Number.From(Date.AddDays(today, -1) - startDate), #duration(1, 0, 0, 0)),
+        transformator = List.Transform(
+            listofDates,
+            each
+                let
+                    startDateTimeVariable = "'" & Date.ToText(_, "yyyy-MM-ddT00:00:00.000Z") & "'",
+                    endDateTimeVariable = "'" & Date.ToText(_, "yyyy-MM-ddT23:59:59.999Z") & "'",
+                    apiCall = Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/activityevents",
+                                Headers = [
+                                    #"Content-Type" = "application/json"
+                                ],
+                                Query = [
+                                    startDateTime = startDateTimeVariable,
+                                    endDateTime = endDateTimeVariable,
+                                    #"$filter" = "Activity eq 'ExportReport'"
+                                ]
+                            ]
+                        )
+                    ),
+                    generator = List.Buffer(
+                        List.Generate(
+                            () =>
+                                [
+                                    result = apiCall,
+                                    uri = result[continuationUri]?,
+                                    lastResultSet = result[lastResultSet]?
+                                ],
+                            each [uri] <> null,
+                            each
+                                [
+                                    result = Json.Document(
+                                        Web.Contents(uri, [
+                                            Headers = [
+                                                #"Content-Type" = "application/json"
+                                            ]
+                                        ])
+                                    ),
+                                    uri = _[result][continuationUri]?,
+                                    lastResultSet = _[result][lastResultSet]?
+                                ],
+                            each[result][activityEventEntities]?
+                        )
+                    ),
+                    convertor = List.RemoveNulls(List.Combine(generator))
+                in
+                    convertor
+        ),
+        listOutputConvertor = List.RemoveNulls(List.Combine(transformator))
+    in
+        #table(
+            type table [
+                output = record
+            ],
+            List.Transform(
+                listOutputConvertor,
+                each
+                    {
+                        _
+                    }
+            )
+        );
 //** Functions Library
 //**** Artifact Access
 [
