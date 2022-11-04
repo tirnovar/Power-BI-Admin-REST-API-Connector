@@ -111,7 +111,7 @@ ID | Name | Description
 - Function for Unused Artifacts (by Workspace ID)
 - Function for Datasets to Dataflow Links (Dataset ID)
 - Deployment Pipeline Operations History
-- Dataflow refreshes
+- Dataflow refreshes *API Call EXISTS but works only on dataflows, that are in workspaces where logged used have access*
 
 </details>
 
