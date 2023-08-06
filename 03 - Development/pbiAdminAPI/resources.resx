@@ -273,6 +273,9 @@
   <data name="CapacitiesUsers" xml:space="preserve">
     <value>Capacities - Users</value>
   </data>
+  <data name="TenantSettings" xml:space="preserve">
+    <value>Tenant Settings</value>
+  </data>
   <data name="TenantKeys" xml:space="preserve">
     <value>Encryption Tenant Keys</value>
   </data>

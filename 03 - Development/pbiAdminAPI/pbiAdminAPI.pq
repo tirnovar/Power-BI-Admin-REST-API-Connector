@@ -19,6 +19,7 @@ learn_more_uri = "https://github.com/tirnovar/Power-BI-Admin-REST-API-Connector"
 
 // Static variables
 api_uri = "https://api.powerbi.com/v1.0/myorg";
+fabric_api_uri = "https://api.fabric.microsoft.com/v1";
 
 // Connector Window
 windowWidth = 1024;
@@ -375,6 +376,9 @@ AboutTenantNavigation = () as table =>
         objects = #table(
             {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
             {
+                {
+                    Extension.LoadString("TenantSettings"), "TenantSettings", pbiAdminAPI.TenantSettings(), "Table", "Table", true
+                },
                 {Extension.LoadString("TenantKeys"), "TenantKeys", pbiAdminAPI.TenantKeys(), "Table", "Table", true},
                 {Extension.LoadString("Imports"), "Imports", pbiAdminAPI.Imports(), "Table", "Table", true},
                 {
@@ -1859,6 +1863,50 @@ DatasourcesOfDataset = (optional datasetId as text) =>
                 {"graphId", type text},
                 {"principalType", type text}
             }
+        )
+    in
+        output;
+//**** Tenant settings
+[
+    DataSource.Kind = "pbiAdminAPI"
+] pbiAdminAPI.TenantSettings = () =>
+    let
+        apiCall = Json.Document(
+            Web.Contents(
+                fabric_api_uri,
+                [
+                    RelativePath = "admin/tenantsettings",
+                    Headers = [
+                        #"Content-Type" = "application/json"
+                    ]
+                ]
+            )
+        ),
+        output = #table(
+            type table [
+                settingName = text,
+                title = text,
+                enabled = binary,
+                canSpecifySecurityGroups = binary,
+                enabledSecurityGroups = list,
+                excludedSecurityGroups = list,
+                tenantSettingGroup = text,
+                properties = list
+            ],
+            List.Transform(
+                apiCall[tenantSettings],
+                each
+                    {
+                        _[settingName]?,
+                        _[title]?,
+                        _[enabled]?,
+                        _[canSpecifySecurityGroups]?,
+                        _[enabledSecurityGroups]?,
+                        _[excludedSecurityGroups]?,
+                        _[tenantSettingGroup]?,
+                        _[properties]?
+                    }
+            )
         )
     in
         output;
