@@ -35,6 +35,7 @@ ID | Name | Description
     │   ├── Imports
     │   ├── Links shared to whole organization
     │   ├── Reports published to Web
+    │   ├── Tenant Settings
     │   └── Unused Artifacts in Groups (All)
     ├── Gateways
     │   ├── Gateways
