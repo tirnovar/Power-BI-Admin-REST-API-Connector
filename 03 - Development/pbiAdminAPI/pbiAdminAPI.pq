@@ -1886,8 +1886,8 @@ DatasourcesOfDataset = (optional datasetId as text) =>
             type table [
                 settingName = text,
                 title = text,
-                enabled = binary,
-                canSpecifySecurityGroups = binary,
+                enabled = logical,
+                canSpecifySecurityGroups = logical,
                 enabledSecurityGroups = list,
                 excludedSecurityGroups = list,
                 tenantSettingGroup = text,
@@ -1899,8 +1899,8 @@ DatasourcesOfDataset = (optional datasetId as text) =>
                     {
                         _[settingName]?,
                         _[title]?,
-                        _[enabled]?,
-                        _[canSpecifySecurityGroups]?,
+                        Logical.From(_[enabled]?),
+                        Logical.From(_[canSpecifySecurityGroups]?),
                         _[enabledSecurityGroups]?,
                         _[excludedSecurityGroups]?,
                         _[tenantSettingGroup]?,
