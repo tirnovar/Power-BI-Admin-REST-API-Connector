@@ -23,7 +23,6 @@ fabric_api_uri = "https://api.fabric.microsoft.com/v1";
 
 // Connector Window
 windowWidth = 1024;
-
 windowHeight = 1024;
 
 // Source
@@ -314,6 +313,14 @@ MetricsNavigation = () as table =>
                     "Function",
                     "GoalValuesAndNotes",
                     true
+                },
+                {
+                    Extension.LoadString("GroupsCaller"),
+                    "GroupsCaller",
+                    pbiAdminAPI.GroupsCaller,
+                    "Function",
+                    "GroupsCaller",
+                    true
                 }
             }
         ),
@@ -377,7 +384,12 @@ AboutTenantNavigation = () as table =>
             {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
             {
                 {
-                    Extension.LoadString("TenantSettings"), "TenantSettings", pbiAdminAPI.TenantSettings(), "Table", "Table", true
+                    Extension.LoadString("TenantSettings"),
+                    "TenantSettings",
+                    pbiAdminAPI.TenantSettings(),
+                    "Table",
+                    "Table",
+                    true
                 },
                 {Extension.LoadString("TenantKeys"), "TenantKeys", pbiAdminAPI.TenantKeys(), "Table", "Table", true},
                 {Extension.LoadString("Imports"), "Imports", pbiAdminAPI.Imports(), "Table", "Table", true},
@@ -402,6 +414,14 @@ AboutTenantNavigation = () as table =>
                     Extension.LoadString("UnusedArtifacts"),
                     "UnusedArtifacts",
                     pbiAdminAPI.UnusedArtifacts(),
+                    "Table",
+                    "Table",
+                    true
+                },
+                {
+                    Extension.LoadString("Domains"),
+                    "Domains",
+                    pbiAdminAPI.Domains(),
                     "Table",
                     "Table",
                     true
@@ -562,7 +582,7 @@ ActivityNavigation = () as table =>
                     "Table",
                     "Table",
                     true
-                } 
+                }
             }
         ),
         Navigation = Table.ForceToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
@@ -585,39 +605,46 @@ pbiAdminAPI = [
 // ** Groups
 [
     DataSource.Kind = "pbiAdminAPI"
-] pbiAdminAPI.Groups = (optional expandParameters) =>
+] pbiAdminAPI.Groups = () =>
     let
-        expandParameters = if expandParameters = null then "users,reports,dashboards,datasets,dataflows,workbooks" else expandParameters,
+        expandParameters = "users,reports,dashboards,datasets,dataflows,workbooks",
         queryRecord = [#"$top" = "5000", #"$expand" = expandParameters],
-        apiCall = 
-        List.Generate(
-            ()=>[values = Json.Document(
-                Web.Contents(
-                    api_uri,
-                    [
-                        RelativePath = "admin/groups",
-                        Headers = [
-                            #"Content-Type" = "application/json"
-                        ],
-                        Query = queryRecord
-                    ]
-                )
-            )[value]?, index = 5000],
-            each [values] <> null or List.IsEmpty([values]),
-            each [values = Json.Document(
-                Web.Contents(
-                    api_uri,
-                    [
-                        RelativePath = "admin/groups",
-                        Headers = [
-                            #"Content-Type" = "application/json"
-                        ],
-                        Query = Record.AddField(queryRecord,"$skip",Text.From(index))
-                    ]
-                )
-            )[value]?, index = [index] + 5000],
+        apiCall = List.Combine(List.Generate(
+            () =>
+                [
+                    values = Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/groups",
+                                Headers = [
+                                    #"Content-Type" = "application/json"
+                                ],
+                                Query = queryRecord
+                            ]
+                        )
+                    )[value]?,
+                    index = 5000
+                ],
+            each not List.IsEmpty([values]),
+            each
+                [
+                    values = Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/groups",
+                                Headers = [
+                                    #"Content-Type" = "application/json"
+                                ],
+                                Query = Record.AddField(queryRecord, "$skip", Text.From(index))
+                            ]
+                        )
+                    )[value]?,
+                    index = [index] + 5000
+                ],
             each [values]
-        ),
+        )),
         output = #table(
             type table [
                 id = text,
@@ -641,7 +668,7 @@ pbiAdminAPI = [
                     {
                         _[id]?,
                         Logical.From(_[isReadOnly]?),
-                        _[isOnDedicatedCapacity]?,
+                        Logical.From(_[isOnDedicatedCapacity]?),
                         _[capacityId]?,
                         _[capacityMigrationStatus]?,
                         _[#"type"]?,
@@ -1921,6 +1948,44 @@ DatasourcesOfDataset = (optional datasetId as text) =>
                         _[excludedSecurityGroups]?,
                         _[tenantSettingGroup]?,
                         _[properties]?
+                    }
+            )
+        )
+    in
+        output;
+//**** Domains 
+[
+    DataSource.Kind = "pbiAdminAPI"
+] pbiAdminAPI.Domains = () =>
+    let
+        apiCall = Json.Document(
+            Web.Contents(
+                fabric_api_uri,
+                [
+                    RelativePath = "admin/domains",
+                    Headers = [
+                        #"Content-Type" = "application/json"
+                    ]
+                ]
+            )
+        ),
+        output = #table(
+            type table [
+                id = text,
+                displayName = text,
+                description = text,
+                parentDomainId = text,
+                contributionsScope = text
+            ],
+            List.Transform(
+                apiCall[domains],
+                each
+                    {
+                        _[id]?,
+                        _[displayName]?,
+                        _[description]?,
+                        _[parentDomainId]?,
+                        _[contributionsScope]?
                     }
             )
         )
@@ -3251,6 +3316,120 @@ ScannerAPIStatusAndResult = (optional scanId as text) =>
                 #table(type table [Response = text], {{"Please fill parameter of function."}})
     in
         functionVarTester;
+
+shared pbiAdminAPI.GroupsCaller = Value.ReplaceType(GroupsCaller, GroupsCallerType);
+
+GroupsCallerType = type function (
+    optional workspaceId as (
+        type text meta [
+            Documentation.FieldCaption = "expandParameter",
+            Documentation.FieldDescription = "expandParameter represents what you want to expand. If you want to expand all, just leave it empty.",
+            Documentation.SampleValues = {"users,reports,dashboards,..."}
+        ]
+    )
+) as table meta [
+    Documentation.Name = "pbiAdminAPI.GroupsCaller",
+    Documentation.LongDescription = "This call can be used to easier extracting of workspaces and their content.",
+    Documentation.Examples = {
+        [
+            Code = "=pbiAdminAPI.GroupsCaller(null)",
+            Result = "With all expanding parameters"
+        ],
+        [
+            Code = "=pbiAdminAPI.GroupsCaller(""users,reports,dashboards,datasets"")",
+            Result = "With all selected expanding parameters"
+        ],
+        [
+            Code = "=pbiAdminAPI.GroupsCaller("""")",
+            Result = "Without any expanding parameters"
+        ]
+    }
+];
+
+GroupsCaller = (optional expandParameter as text) =>
+    let
+        expandParameters =
+            if expandParameter = null then
+                "users,reports,dashboards,datasets,dataflows,workbooks"
+            else
+                expandParameter,
+        queryRecord = [#"$top" = "5000", #"$expand" = expandParameters],
+        apiCall = List.Combine(List.Generate(
+            () =>
+                [
+                    values = Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/groups",
+                                Headers = [
+                                    #"Content-Type" = "application/json"
+                                ],
+                                Query = queryRecord
+                            ]
+                        )
+                    )[value]?,
+                    index = 5000
+                ],
+            each not List.IsEmpty([values]),
+            each
+                [
+                    values = Json.Document(
+                        Web.Contents(
+                            api_uri,
+                            [
+                                RelativePath = "admin/groups",
+                                Headers = [
+                                    #"Content-Type" = "application/json"
+                                ],
+                                Query = Record.AddField(queryRecord, "$skip", Text.From(index))
+                            ]
+                        )
+                    )[value]?,
+                    index = [index] + 5000
+                ],
+            each [values]
+        )),
+        output = #table(
+            type table [
+                id = text,
+                isReadOnly = logical,
+                isOnDedicatedCapacity = logical,
+                capacityId = text,
+                capacityMigrationStatus = text,
+                #"type" = text,
+                state = text,
+                name = text,
+                users = list,
+                reports = list,
+                dashboards = list,
+                datasets = list,
+                dataflows = list,
+                workbooks = list
+            ],
+            List.Transform(
+                apiCall,
+                each
+                    {
+                        _[id]?,
+                        Logical.From(_[isReadOnly]?),
+                        Logical.From(_[isOnDedicatedCapacity]?),
+                        _[capacityId]?,
+                        _[capacityMigrationStatus]?,
+                        _[#"type"]?,
+                        _[state]?,
+                        _[name]?,
+                        _[users]?,
+                        _[reports]?,
+                        _[dashboards]?,
+                        _[datasets]?,
+                        _[dataflows]?,
+                        _[workbooks]?
+                    }
+            )
+        )
+    in
+        output;
 
 //**** Table of Datasets
 [
