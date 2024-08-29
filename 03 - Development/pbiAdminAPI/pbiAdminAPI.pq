@@ -585,22 +585,38 @@ pbiAdminAPI = [
 // ** Groups
 [
     DataSource.Kind = "pbiAdminAPI"
-] pbiAdminAPI.Groups = () =>
+] pbiAdminAPI.Groups = (optional expandParameters) =>
     let
-        apiCall = Json.Document(
-            Web.Contents(
-                api_uri,
-                [
-                    RelativePath = "admin/groups",
-                    Headers = [
-                        #"Content-Type" = "application/json"
-                    ],
-                    Query = [
-                        #"$top" = "5000",
-                        #"$expand" = "users,reports,dashboards,datasets,dataflows,workbooks"
+        expandParameters = if expandParameters = null then "users,reports,dashboards,datasets,dataflows,workbooks" else expandParameters,
+        queryRecord = [#"$top" = "5000", #"$expand" = expandParameters],
+        apiCall = 
+        List.Generate(
+            ()=>[values = Json.Document(
+                Web.Contents(
+                    api_uri,
+                    [
+                        RelativePath = "admin/groups",
+                        Headers = [
+                            #"Content-Type" = "application/json"
+                        ],
+                        Query = queryRecord
                     ]
-                ]
-            )
+                )
+            )[value]?, index = 5000],
+            each [values] <> null or List.IsEmpty([values]),
+            each [values = Json.Document(
+                Web.Contents(
+                    api_uri,
+                    [
+                        RelativePath = "admin/groups",
+                        Headers = [
+                            #"Content-Type" = "application/json"
+                        ],
+                        Query = Record.AddField(queryRecord,"$skip",Text.From(index))
+                    ]
+                )
+            )[value]?, index = [index] + 5000],
+            each [values]
         ),
         output = #table(
             type table [
@@ -620,7 +636,7 @@ pbiAdminAPI = [
                 workbooks = list
             ],
             List.Transform(
-                apiCall[value],
+                apiCall,
                 each
                     {
                         _[id]?,
