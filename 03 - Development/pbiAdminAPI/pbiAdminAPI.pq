@@ -313,14 +313,6 @@ MetricsNavigation = () as table =>
                     "Function",
                     "GoalValuesAndNotes",
                     true
-                },
-                {
-                    Extension.LoadString("GroupsCaller"),
-                    "GroupsCaller",
-                    pbiAdminAPI.GroupsCaller,
-                    "Function",
-                    "GroupsCaller",
-                    true
                 }
             }
         ),
@@ -504,6 +496,14 @@ FunctionsNavigation = () as table =>
                     "Function",
                     "OwnAPICall",
                     true
+                },
+                {
+                    Extension.LoadString("GroupsCaller"),
+                    "GroupsCaller",
+                    pbiAdminAPI.GroupsCaller,
+                    "Function",
+                    "GroupsCaller",
+                    true
                 }
             }
         ),
@@ -637,7 +637,7 @@ pbiAdminAPI = [
                                 Headers = [
                                     #"Content-Type" = "application/json"
                                 ],
-                                Query = Record.AddField(queryRecord, "$skip", Text.From(index))
+                                Query = Record.AddField(queryRecord, "$skip", Text.From([index]))
                             ]
                         )
                     )[value]?,
@@ -3317,10 +3317,14 @@ ScannerAPIStatusAndResult = (optional scanId as text) =>
     in
         functionVarTester;
 
+//**** GroupsCaller
+[
+    DataSource.Kind = "pbiAdminAPI"
+]
 shared pbiAdminAPI.GroupsCaller = Value.ReplaceType(GroupsCaller, GroupsCallerType);
 
 GroupsCallerType = type function (
-    optional workspaceId as (
+    optional expandParameter as (
         type text meta [
             Documentation.FieldCaption = "expandParameter",
             Documentation.FieldDescription = "expandParameter represents what you want to expand. If you want to expand all, just leave it empty.",
@@ -3382,7 +3386,7 @@ GroupsCaller = (optional expandParameter as text) =>
                                 Headers = [
                                     #"Content-Type" = "application/json"
                                 ],
-                                Query = Record.AddField(queryRecord, "$skip", Text.From(index))
+                                Query = Record.AddField(queryRecord, "$skip", Text.From([index]))
                             ]
                         )
                     )[value]?,

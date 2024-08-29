@@ -312,4 +312,10 @@
   <data name="ExportedReportBy30Days" xml:space="preserve">
     <value>Exported Reports By 30 Days</value>
   </data>
+  <data name="Domains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="GroupsCaller" xml:space="preserve">
+    <value>Groups Extended Caller</value>
+  </data>
 </root>

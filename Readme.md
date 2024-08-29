@@ -33,6 +33,7 @@ ID | Name | Description
     │   ├── Avaiable Features
     │   ├── Encryption Tenant Keys
     │   ├── Imports
+    │   ├── Domains
     │   ├── Links shared to whole organization
     │   ├── Reports published to Web
     │   ├── Tenant Settings
@@ -88,6 +89,7 @@ ID | Name | Description
     └── Functions library
         ├── (fx) Execute Query against dataset
         ├── (fx) Own API Call
+        ├── (fx) Groups Extended Caller
         ├── (fx) User - Artifact Access
         └── (fx) User - Subscriptions
         
